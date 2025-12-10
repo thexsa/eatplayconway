@@ -142,7 +142,7 @@ export type Database = {
                     ticket_url: string | null
                     image_url: string | null
                     is_featured: boolean
-                    status: 'raw' | 'enriched' | 'published' | 'rejected' | 'archived'
+                    status: 'raw' | 'enriched' | 'published' | 'rejected' | 'archived' | 'draft'
                     created_at: string
                 }
                 Insert: {
@@ -163,7 +163,7 @@ export type Database = {
                     ticket_url?: string | null
                     image_url?: string | null
                     is_featured?: boolean
-                    status?: 'raw' | 'enriched' | 'published' | 'rejected' | 'archived'
+                    status?: 'raw' | 'enriched' | 'published' | 'rejected' | 'archived' | 'draft'
                     created_at?: string
                 }
                 Update: {
@@ -184,7 +184,7 @@ export type Database = {
                     ticket_url?: string | null
                     image_url?: string | null
                     is_featured?: boolean
-                    status?: 'raw' | 'enriched' | 'published' | 'rejected' | 'archived'
+                    status?: 'raw' | 'enriched' | 'published' | 'rejected' | 'archived' | 'draft'
                     created_at?: string
                 }
             }

@@ -35,7 +35,7 @@ export async function getPendingEvents() {
                 name
             )
         `)
-        .in('status', ['enriched', 'raw']) // Ready for review
+        .in('status', ['enriched', 'raw', 'draft']) // Ready for review
         .order('ai_confidence', { ascending: false })
 
     if (error) {
