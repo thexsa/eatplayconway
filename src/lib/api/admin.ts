@@ -35,7 +35,7 @@ export async function getPendingEvents() {
                 name
             )
         `)
-        .eq('status', 'enriched') // Ready for review
+        .in('status', ['enriched', 'raw']) // Ready for review
         .order('ai_confidence', { ascending: false })
 
     if (error) {
@@ -44,4 +44,20 @@ export async function getPendingEvents() {
     }
 
     return data
+}
+
+export async function getDashboardStats() {
+    const supabase = await createClient()
+
+    const [eventsCount, dealsCount, sourcesCount] = await Promise.all([
+        supabase.from('events').select('*', { count: 'exact', head: true }),
+        supabase.from('deals').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('scrape_sources').select('*', { count: 'exact', head: true }).eq('is_active', true)
+    ])
+
+    return {
+        totalEvents: eventsCount.count || 0,
+        activeDeals: dealsCount.count || 0,
+        activeSources: sourcesCount.count || 0,
+    }
 }

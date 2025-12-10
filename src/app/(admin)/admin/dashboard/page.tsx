@@ -1,13 +1,17 @@
-import { ArrowUpRight, ArrowDownRight, Users, Calendar, DollarSign, Activity } from 'lucide-react'
+import { ArrowUpRight, ArrowDownRight, Users, Calendar, DollarSign, Activity, ListTodo } from 'lucide-react'
+import { getDashboardStats } from '@/lib/api/admin'
+import Link from 'next/link'
 
-const stats = [
-    { name: 'Total Events', value: '1,203', change: '+12.5%', changeType: 'increase', icon: Calendar },
-    { name: 'Active Deals', value: '42', change: '-2.1%', changeType: 'decrease', icon: DollarSign },
-    { name: 'Total Views', value: '45.2k', change: '+24.3%', changeType: 'increase', icon: Users },
-    { name: 'Scrape Health', value: '98.5%', change: '+1.2%', changeType: 'increase', icon: Activity },
-]
+export default async function AdminDashboardPage() {
+    const data = await getDashboardStats()
 
-export default function AdminDashboardPage() {
+    const stats = [
+        { name: 'Total Events', value: data.totalEvents.toString(), change: 'Database', changeType: 'neutral', icon: Calendar },
+        { name: 'Active Deals', value: data.activeDeals.toString(), change: 'Live', changeType: 'increase', icon: DollarSign },
+        { name: 'Active Sources', value: data.activeSources.toString(), change: 'Monitoring', changeType: 'neutral', icon: Activity },
+        { name: 'System Status', value: 'Online', change: 'Vercel', changeType: 'increase', icon: Users }, // Placeholder for Views
+    ]
+
     return (
         <div className="space-y-8">
             <div>
@@ -24,8 +28,7 @@ export default function AdminDashboardPage() {
                         </div>
                         <div className="mt-4 flex items-baseline gap-2">
                             <span className="text-3xl font-bold">{stat.value}</span>
-                            <span className={`flex items-center text-sm font-medium ${stat.changeType === 'increase' ? 'text-green-600' : 'text-red-600'}`}>
-                                {stat.changeType === 'increase' ? <ArrowUpRight className="size-4" /> : <ArrowDownRight className="size-4" />}
+                            <span className="flex items-center text-sm font-medium text-zinc-500">
                                 {stat.change}
                             </span>
                         </div>
@@ -35,23 +38,29 @@ export default function AdminDashboardPage() {
 
             <div className="grid gap-6 lg:grid-cols-2">
                 <div className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800">
-                    <h3 className="font-semibold">Recent Event Submissions</h3>
-                    <div className="mt-6 flex h-64 items-center justify-center text-zinc-400 border-2 border-dashed rounded-lg">
-                        Chart Placeholder
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="font-semibold">Quick Actions</h3>
+                    </div>
+                    <div className="grid gap-4">
+                        <Link href="/admin/events" className="flex items-center justify-between p-4 rounded-lg border hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 bg-blue-100 text-blue-600 rounded-lg dark:bg-blue-900/30 dark:text-blue-400">
+                                    <ListTodo className="size-5" />
+                                </div>
+                                <div>
+                                    <h4 className="font-medium">Review Pending Events</h4>
+                                    <p className="text-sm text-zinc-500">Moderation queue needs attention</p>
+                                </div>
+                            </div>
+                            <ArrowUpRight className="size-4 text-zinc-400" />
+                        </Link>
                     </div>
                 </div>
+
                 <div className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800">
                     <h3 className="font-semibold">Scraper Activity Log</h3>
-                    <div className="mt-6 space-y-4">
-                        {[1, 2, 3, 4].map(i => (
-                            <div key={i} className="flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-3">
-                                    <div className="size-2 rounded-full bg-green-500" />
-                                    <span>Facebook Page Scrape (JJ&apos;s Grill)</span>
-                                </div>
-                                <span className="text-zinc-500">2m ago</span>
-                            </div>
-                        ))}
+                    <div className="mt-6 flex h-40 items-center justify-center text-zinc-400 border-2 border-dashed rounded-lg">
+                        Logs coming soon...
                     </div>
                 </div>
             </div>
