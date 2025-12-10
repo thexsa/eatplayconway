@@ -2,6 +2,7 @@ import { Check, X, Eye } from 'lucide-react'
 import { getPendingEvents } from '@/lib/api/admin'
 import { approveEvent, rejectEvent } from './actions'
 import Link from 'next/link'
+import { EventActionButtons } from '@/components/admin/EventActionButtons'
 
 export default async function EventsQueuePage() {
     const events = await getPendingEvents()
@@ -44,8 +45,8 @@ export default async function EventsQueuePage() {
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${(event.ai_confidence || 0) > 0.8
-                                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
                                         }`}>
                                         {((event.ai_confidence || 0) * 100).toFixed(0)}%
                                     </span>
@@ -59,18 +60,7 @@ export default async function EventsQueuePage() {
                                     <Link href={`/events/${event.slug}`} target="_blank" className="p-1 text-zinc-400 hover:text-blue-500">
                                         <Eye className="size-4" />
                                     </Link>
-
-                                    <form action={approveEvent.bind(null, event.id)}>
-                                        <button type="submit" className="p-1 text-zinc-400 hover:text-green-500" title="Approve & Publish">
-                                            <Check className="size-4" />
-                                        </button>
-                                    </form>
-
-                                    <form action={rejectEvent.bind(null, event.id)}>
-                                        <button type="submit" className="p-1 text-zinc-400 hover:text-red-500" title="Reject">
-                                            <X className="size-4" />
-                                        </button>
-                                    </form>
+                                    <EventActionButtons eventId={event.id} />
                                 </td>
                             </tr>
                         ))}
