@@ -2,9 +2,10 @@ import { createClient } from '@/utils/supabase/server'
 import { NormalizedEvent } from '@/lib/scraper/types'
 import { slugify } from '@/utils/slugify'
 import { enrichEvent } from '@/lib/ai/enrichment'
+import { SupabaseClient } from '@supabase/supabase-js'
 
-export async function ingestEvents(events: NormalizedEvent[], sourceId: string) {
-    const supabase = await createClient()
+export async function ingestEvents(events: NormalizedEvent[], sourceId: string, client?: SupabaseClient) {
+    const supabase = client || await createClient()
 
     // fetch business_id from source
     const { data: source } = await supabase.from('scrape_sources').select('business_id').eq('id', sourceId).single()

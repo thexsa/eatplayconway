@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Database, Calendar, check, Settings, Users, BarChart3, Globe } from 'lucide-react'
+import { LayoutDashboard, Database, Calendar, Check, Settings, Users, BarChart3, Globe } from 'lucide-react'
 import { clsx } from 'clsx'
 
 const navigation = [

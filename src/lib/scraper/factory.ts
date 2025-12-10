@@ -1,5 +1,5 @@
 import { ScraperRunner, ScraperType } from './types';
-import { RssScraper } from './rss';
+import { RssScraper } from './runners/rss';
 
 export class ScraperFactory {
     private static runners: ScraperRunner[] = [
