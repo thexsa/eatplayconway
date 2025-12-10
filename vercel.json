@@ -7,10 +7,6 @@
         {
             "path": "/api/cron/generate-weekly",
             "schedule": "0 9 * * 5"
-        },
-        {
-            "path": "/api/cron/post-socials",
-            "schedule": "0 9 * * *"
         }
     ]
 }
