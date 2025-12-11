@@ -3,7 +3,7 @@
 :root {
   --background: #F9F9F9;
   --foreground: #2D3436;
-  
+
   /* Meriden Fluid Palette */
   --brand-orange: #FF9F43;
   --brand-red: #FF6B6B;
@@ -15,7 +15,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  
+
   --color-brand-orange: var(--brand-orange);
   --color-brand-red: var(--brand-red);
   --color-brand-yellow: var(--brand-yellow);
@@ -28,9 +28,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Forcing Meriden Theme even in dark mode for consistency with the requested aesthetic */
+    --background: #F9F9F9;
+    --foreground: #2D3436;
   }
+}
+
+html,
+body {
+  background-color: var(--brand-cream);
+  min-height: 100vh;
 }
 
 body {
