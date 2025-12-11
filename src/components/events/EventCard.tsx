@@ -3,19 +3,19 @@ import { Calendar, MapPin, Ticket } from 'lucide-react'
 import { format } from 'date-fns'
 import { EventWithVenue } from '@/lib/api/events'
 
-export function EventCard({ event }: { event: EventWithVenue }) {
+export function EventCard({ event }: { event: { title: string, start_time: string, slug: string, businesses?: { name: string } | null, image_url?: string | null, price_min?: number | null, price_max?: number | null, categories?: string[] | null } }) {
     const startDate = new Date(event.start_time)
     const venueName = event.businesses?.name || 'Unknown Venue'
-    const category = (event.categories && event.categories[0]) || 'Event'
     const minPrice = event.price_min
     const maxPrice = event.price_max
 
     return (
         <Link
             href={`/events/${event.slug}`}
-            className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-orange/20"
+            className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all hover:shadow-md hover:border-brand-orange/20"
         >
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
+            {/* Image */}
+            <div className="relative aspect-[4/3] bg-brand-cream overflow-hidden">
                 {event.image_url ? (
                     <img
                         src={event.image_url} // eslint-disable-line @next/next/no-img-element
@@ -23,12 +23,12 @@ export function EventCard({ event }: { event: EventWithVenue }) {
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                 ) : (
-                    <div className="flex h-full items-center justify-center text-brand-orange/40 bg-brand-cream">
-                        <Calendar className="size-12" />
+                    <div className="flex h-full items-center justify-center bg-brand-cream text-brand-orange/20 group-hover:text-brand-orange/30 transition-colors">
+                        <Calendar className="size-16" />
                     </div>
                 )}
-                <div className="absolute top-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold uppercase tracking-wider text-text-dark backdrop-blur-sm shadow-sm">
-                    {category}
+                <div className="absolute top-3 right-3 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-text-dark shadow-sm backdrop-blur-sm">
+                    Ticketed
                 </div>
             </div>
 

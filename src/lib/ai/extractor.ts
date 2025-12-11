@@ -16,6 +16,7 @@ export async function extractEventsFromText(text: string, sourceUrl: string): Pr
     - start_time: The start date and time in ISO format (YYYY-MM-DDTHH:mm:ss.sssZ). Assume the event is in the near future (2025) if the year is missing. Use the Central Time Zone (America/Chicago) context if needed.
     - description: A brief summary of the event details, including price if mentioned.
     - url: A specific URL for the event if available in the text, otherwise use the source URL.
+    - image_url: A relevant image URL if explicitly linked in the text (e.g. <img src="...">). Do not guess.
     - raw_data: Store any other relevant raw details here as a JSON object (e.g. location, price string).
     
     IMPORTANT: Do NOT extract the following types of content:

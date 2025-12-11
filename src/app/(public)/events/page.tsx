@@ -2,6 +2,7 @@ import { EventCard } from '@/components/events/EventCard'
 import { Calendar, Filter, ArrowRight } from 'lucide-react'
 import { getUpcomingEvents } from '@/lib/api/events'
 import Link from 'next/link'
+import { EventsFilter } from '@/components/events/EventsFilter'
 
 export default async function EventsPage() {
     const events = await getUpcomingEvents(50) // Fetch more events for the listing page
@@ -25,14 +26,7 @@ export default async function EventsPage() {
                         <div className="font-serif text-lg text-text-dark">
                             Showing {events.length} Upcoming Events
                         </div>
-                        <div className="flex gap-2">
-                            <button className="flex items-center gap-2 rounded-full border border-gray-200 bg-transparent px-4 py-2 text-sm font-semibold text-text-dark hover:bg-gray-50 transition-colors">
-                                <Calendar className="size-4" /> Date Range
-                            </button>
-                            <button className="flex items-center gap-2 rounded-full border border-gray-200 bg-transparent px-4 py-2 text-sm font-semibold text-text-dark hover:bg-gray-50 transition-colors">
-                                <Filter className="size-4" /> Filters
-                            </button>
-                        </div>
+                        <EventsFilter />
                     </div>
 
                     {/* Grid */}
