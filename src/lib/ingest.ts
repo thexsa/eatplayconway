@@ -43,6 +43,15 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             console.log(`Skipped enrichment for ${event.title} (Fast Mode)`);
 
 
+            // Default Images (Conway/Arkansas aesthetic)
+            const DEFAULT_IMAGES = [
+                'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80', // Party/people
+                'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80', // Crowd
+                'https://images.unsplash.com/photo-1470229722913-7ea051c24d80?auto=format&fit=crop&q=80', // Concert
+                'https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80', // Conversation
+                'https://images.unsplash.com/photo-1561489413-985b06da5bee?auto=format&fit=crop&q=80'  // Abstract lights
+            ];
+
             // Deterministic Slug Suffix (Hash of start_time) to survive rebuilds
             // Simple string hash function
             const dateStr = event.start_time || '';
@@ -52,6 +61,14 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 hash |= 0;
             }
             const suffix = Math.abs(hash).toString(36).slice(-6);
+
+            // final fallback logic
+            let finalImage = enriched.image_url || event.image_url;
+            if (!finalImage) {
+                // Deterministic random image based on title length
+                const index = (event.title?.length || 0) % DEFAULT_IMAGES.length;
+                finalImage = DEFAULT_IMAGES[index];
+            }
 
             eventsToInsert.push({
                 source_id: sourceId,
@@ -67,8 +84,8 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 ai_confidence: enriched.confidence_score,
                 price_min: enriched.price_min ?? event.price_min,
                 price_max: enriched.price_max ?? event.price_max,
-                // Prioritize AI image, fallback to scraper image
-                image_url: enriched.image_url || event.image_url,
+                // Prioritize AI image, fallback to scraper image, fallback to default
+                image_url: finalImage,
                 status: enriched.confidence_score > 0.85 ? 'published' : 'draft',
             });
         } catch (err) {

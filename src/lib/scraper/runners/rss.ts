@@ -19,7 +19,19 @@ export class RssScraper implements ScraperRunner {
             return feed.items.map((item: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                 // Extract image from enclosure or media:content
                 // rss-parser puts media:content in item['media:content'] or item.enclosure
-                const image = item.enclosure?.url || item['media:content']?.['$']?.url || item['media:group']?.['media:content']?.[0]?.['$']?.url || null;
+                let image = item.enclosure?.url || item['media:content']?.['$']?.url || item['media:group']?.['media:content']?.[0]?.['$']?.url;
+
+                // Fallback: Try to find distinct image in content HTML
+                if (!image && (item.content || item['content:encoded'])) {
+                    const html = item['content:encoded'] || item.content;
+                    const srcMatch = html.match(/src="([^"]+)"/);
+                    if (srcMatch && srcMatch[1]) {
+                        // Filter out common trackers/pixel bugs
+                        if (!srcMatch[1].includes('pixel') && !srcMatch[1].includes('analytics')) {
+                            image = srcMatch[1];
+                        }
+                    }
+                }
 
                 return {
                     title: item.title || 'Untitled Event',
