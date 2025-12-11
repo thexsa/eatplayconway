@@ -37,6 +37,23 @@ export async function rejectEvent(eventId: string) {
     revalidatePath('/admin/events')
 }
 
+export async function approveAllPending() {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('events')
+        .update({ status: 'published' })
+        .eq('status', 'draft') // or 'pending' if you use that status, assuming 'draft' is the review state
+
+    if (error) {
+        throw new Error('Failed to bulk approve events')
+    }
+
+    revalidatePath('/admin/events')
+    revalidatePath('/events')
+    revalidatePath('/')
+}
+
 export async function updateEvent(prevState: any, formData: FormData) {
     const supabase = await createClient()
 

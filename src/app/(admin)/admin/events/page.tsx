@@ -3,6 +3,7 @@ import { getPendingEvents } from '@/lib/api/admin'
 import { approveEvent, rejectEvent } from './actions'
 import Link from 'next/link'
 import { EventActionButtons } from '@/components/admin/EventActionButtons'
+import { BulkApproveButton } from '@/components/admin/BulkApproveButton'
 
 export default async function EventsQueuePage() {
     const events = await getPendingEvents()
@@ -14,6 +15,11 @@ export default async function EventsQueuePage() {
                     <h1 className="font-serif text-3xl font-bold tracking-tight text-text-dark">Events Queue</h1>
                     <p className="text-gray-500">Review {events?.length || 0} pending events.</p>
                 </div>
+                {events && events.length > 0 && (
+                    <div className="flex gap-2">
+                        <BulkApproveButton />
+                    </div>
+                )}
             </div>
 
             <div className="rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden">
@@ -78,6 +84,6 @@ export default async function EventsQueuePage() {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div >
     )
 }

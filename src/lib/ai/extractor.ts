@@ -17,6 +17,11 @@ export async function extractEventsFromText(text: string, sourceUrl: string): Pr
     - description: A brief summary of the event details, including price if mentioned.
     - url: A specific URL for the event if available in the text, otherwise use the source URL.
     - raw_data: Store any other relevant raw details here as a JSON object (e.g. location, price string).
+    
+    IMPORTANT: Do NOT extract the following types of content:
+    - Obituaries, death notices, or funeral announcements.
+    - Police logs, arrest reports, or court dockets.
+    - Classified ads or generic business listings (unless it's a specific event).
 
     If the text contains no events, return an empty list.
     
