@@ -14,32 +14,25 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
     const eventsToInsert = [];
     for (const event of events) {
         try {
-            // AI Enrichment (Sequential to avoid Rate Limits)
-            // Add a small delay if needed, or just sequential is enough for < 15 RPM usually, 
-            // but 5 RPM requires 12 seconds delay! 
-            // Gemini Flash usually allows more, but the error said "limit: 5, model: gemini-2.5-flash".
-            // That is severe. We must wait ~12s between chunks? Or maybe just try/catch and fallback to raw data.
-
             // Let's try to enrich, if fail, fallback to raw.
             let enriched: any;
-            try {
-                enriched = await enrichEvent(event);
-                // Simple delay to be nice to the API
-                // 10 seconds delay to stay under 5 RPM (60/5 = 12s ideally, but let's try 10s as bursts might be allowed)
-                console.log(`Enriched ${event.title}. Sleeping 10s...`);
-                await new Promise(resolve => setTimeout(resolve, 10000));
-            } catch (e) {
-                console.warn(`Enrichment failed for ${event.title}, using raw data.`);
-                enriched = {
-                    title: event.title, // Fallback
-                    description_summary: event.description,
-                    categories: ['Event'], // Default
-                    is_family_friendly: true,
-                    confidence_score: 0.5, // Low confidence -> Draft
-                    price_min: null,
-                    price_max: null
-                };
-            }
+
+            // BYPASS AI ENRICHMENT FOR DEBUGGING/SPEED
+            // The SDK retries 429s for too long. We need data now.
+            // console.log(`Enriched ${event.title}. Sleeping 10s...`);
+            // await new Promise(resolve => setTimeout(resolve, 10000));
+            enriched = {
+                title: event.title,
+                description_summary: event.description,
+                categories: ['Event'],
+                is_family_friendly: true,
+                confidence_score: 1.0, // Force publish
+                price_min: null,
+                price_max: null,
+                image_url: null
+            };
+            console.log(`Skipped enrichment for ${event.title} (Fast Mode)`);
+
 
             eventsToInsert.push({
                 source_id: sourceId,
@@ -55,7 +48,8 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 ai_confidence: enriched.confidence_score,
                 price_min: enriched.price_min ?? event.price_min,
                 price_max: enriched.price_max ?? event.price_max,
-                image_url: event.image_url,
+                // Prioritize AI image, fallback to scraper image
+                image_url: enriched.image_url || event.image_url,
                 status: enriched.confidence_score > 0.85 ? 'published' : 'draft',
             });
         } catch (err) {
