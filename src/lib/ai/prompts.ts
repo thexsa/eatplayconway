@@ -18,8 +18,9 @@ Respond with JSON only:
   "description_summary": "Exciting summary...",
   "categories": ["Music"],
   "price_min": 0,
-  "price_max": 20,
-  "is_family_friendly": true,
-  "confidence_score": 0.9
+  "price_max": number | null,
+  "is_family_friendly": boolean, // true if suitable for children/families
+  "confidence_score": number, // 0.0 to 1.0, how confident are you this is a real event?
+  "image_url": string | null // Valid URL of an image associated with the event, if found in the text.
 }
 `;

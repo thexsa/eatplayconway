@@ -3,8 +3,10 @@ import { getScraper } from './factory'
 import { ingestEvents } from '@/lib/ingest'
 import { ScraperType } from './types'
 
-export async function processSource(sourceId: string) {
-    const supabase = await createClient()
+import { SupabaseClient } from '@supabase/supabase-js'
+
+export async function processSource(sourceId: string, client?: SupabaseClient) {
+    const supabase = client || await createClient()
 
     // 1. Fetch Source
     const { data: source, error } = await supabase
@@ -37,7 +39,9 @@ export async function processSource(sourceId: string) {
 
         // 5. Ingest
         console.log(`Found ${events.length} events. Ingesting...`)
-        await ingestEvents(events, source.id)
+        // 5. Ingest
+        console.log(`Found ${events.length} events. Ingesting...`)
+        await ingestEvents(events, source.id, supabase)
 
         // 6. Update Status
         await supabase

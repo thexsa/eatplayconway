@@ -10,9 +10,13 @@ export default async function EventDetailsPage({
     params: Promise<{ slug: string }>
 }) {
     const { slug } = await params
+    console.log(`[EventDetails] Visiting slug: '${slug}'`)
+
     const event = await getEventBySlug(slug)
+    console.log(`[EventDetails] Lookup result for '${slug}':`, event ? `Found (ID: ${event.id})` : 'NULL')
 
     if (!event) {
+        console.error(`[EventDetails] 404 triggered for slug: ${slug}`)
         notFound()
     }
 

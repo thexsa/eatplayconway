@@ -10,6 +10,7 @@ export interface EnrichedData {
     price_max?: number;
     is_family_friendly: boolean;
     confidence_score: number;
+    image_url?: string;
 }
 
 export async function enrichEvent(rawEvent: any): Promise<EnrichedData> {

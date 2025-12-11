@@ -40,9 +40,24 @@ export class HtmlScraper implements ScraperRunner {
             // For now, simple text() is usually okay for LLMs if we just join with newlines
             const textContent = $('body').text().replace(/\s+/g, ' ').trim();
 
-            console.log(`[HtmlScraper] Sending ${textContent.length} chars to AI...`);
+            // Extract Images
+            const candidateImages: string[] = [];
 
-            const events = await extractEventsFromText(textContent, job.url);
+            // 1. OG Image
+            const ogImage = $('meta[property="og:image"]').attr('content');
+            if (ogImage) candidateImages.push(ogImage);
+
+            // 2. Main Images in body
+            $('img').each((i, el) => {
+                const src = $(el).attr('src');
+                if (src && src.startsWith('http') && !src.includes('logo') && !src.includes('icon')) {
+                    if (candidateImages.length < 10) candidateImages.push(src);
+                }
+            });
+
+            console.log(`[HtmlScraper] Sending ${textContent.length} chars + ${candidateImages.length} images to AI...`);
+
+            const events = await extractEventsFromText(textContent, job.url, { candidate_images: candidateImages });
 
             console.log(`[HtmlScraper] Extracted ${events.length} events.`);
             return events;

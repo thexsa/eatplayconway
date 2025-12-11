@@ -4,7 +4,10 @@ import { getUpcomingEvents } from '@/lib/api/events'
 import Link from 'next/link'
 import { EventsFilter } from '@/components/events/EventsFilter'
 
+export const dynamic = 'force-dynamic' // Disable caching for debugging
+
 export default async function EventsPage() {
+    // Revalidating cache key
     const events = await getUpcomingEvents(50) // Fetch more events for the listing page
 
     return (

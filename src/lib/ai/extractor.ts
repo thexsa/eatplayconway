@@ -5,18 +5,31 @@ interface ExtractionResult {
     events: NormalizedEvent[];
 }
 
-export async function extractEventsFromText(text: string, sourceUrl: string): Promise<NormalizedEvent[]> {
+// Update signature to accept metadata
+export async function extractEventsFromText(
+    text: string,
+    sourceUrl: string,
+    metadata?: { candidate_images?: string[] }
+): Promise<NormalizedEvent[]> {
+    const candidateImagesList = metadata?.candidate_images?.slice(0, 10).map(url => `- ${url}`).join('\n') || 'None';
+
     const prompt = `
     You are an expert event data extractor.
     Your goal is to extract event information from the provided text, which was scraped from a website.
     The source URL is: ${sourceUrl}
+
+    CANDIDATE IMAGES (found in page metadata):
+    ${candidateImagesList}
 
     Please extract a list of events. For each event, provide:
     - title: The name of the event.
     - start_time: The start date and time in ISO format (YYYY-MM-DDTHH:mm:ss.sssZ). Assume the event is in the near future (2025) if the year is missing. Use the Central Time Zone (America/Chicago) context if needed.
     - description: A brief summary of the event details, including price if mentioned.
     - url: A specific URL for the event if available in the text, otherwise use the source URL.
-    - image_url: A relevant image URL if explicitly linked in the text (e.g. <img src="...">). Do not guess.
+    - image_url: A relevant image URL. Preference order:
+        1. An image explicitly linked next to the event in the text.
+        2. One of the 'CANDIDATE IMAGES' if it looks like a main event flyer or relevant photo.
+        3. Null if no good match.
     - raw_data: Store any other relevant raw details here as a JSON object (e.g. location, price string).
     
     IMPORTANT: Do NOT extract the following types of content:
@@ -39,6 +52,7 @@ export async function extractEventsFromText(text: string, sourceUrl: string): Pr
                 "start_time": "ISO Date String",
                 "description": "String",
                 "url": "String",
+                "image_url": "String | null",
                 "raw_data": {} 
             }
         ]
