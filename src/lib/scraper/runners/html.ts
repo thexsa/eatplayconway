@@ -60,7 +60,15 @@ export class HtmlScraper implements ScraperRunner {
             const events = await extractEventsFromText(textContent, job.url, { candidate_images: candidateImages });
 
             console.log(`[HtmlScraper] Extracted ${events.length} events.`);
-            return events;
+
+            // Post-processing: Ensure every event has an image if possible
+            return events.map(event => {
+                if (!event.image_url && candidateImages.length > 0) {
+                    // Use the first candidate (usually og:image) as fallback
+                    return { ...event, image_url: candidateImages[0] };
+                }
+                return event;
+            });
 
         } catch (error: any) {
             console.error(`HTML Scrape failed for ${job.url}`, error);
