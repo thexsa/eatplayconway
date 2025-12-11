@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { getEventBySlug } from '@/lib/api/events'
 import { notFound } from 'next/navigation'
 
+export const dynamic = 'force-dynamic' // Disable caching to fix 404s on fresh database
+
 export default async function EventDetailsPage({
     params,
 }: {

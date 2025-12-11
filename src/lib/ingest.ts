@@ -12,7 +12,16 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
     const businessId = source?.business_id
 
     const eventsToInsert = [];
+
+    // Safety Filter for unwanted content (Obituaries, arrests, etc)
+    const BLOCKLIST_REGEX = /obituary|death notice|funeral|memorial service|arrest|police log|jail/i;
+
     for (const event of events) {
+        if (BLOCKLIST_REGEX.test(event.title) || BLOCKLIST_REGEX.test(event.description || '')) {
+            console.warn(`[Ingest] Blocking blocked content: ${event.title}`);
+            continue;
+        }
+
         try {
             // Let's try to enrich, if fail, fallback to raw.
             let enriched: any;
@@ -34,11 +43,21 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             console.log(`Skipped enrichment for ${event.title} (Fast Mode)`);
 
 
+            // Deterministic Slug Suffix (Hash of start_time) to survive rebuilds
+            // Simple string hash function
+            const dateStr = event.start_time || '';
+            let hash = 0;
+            for (let i = 0; i < dateStr.length; i++) {
+                hash = ((hash << 5) - hash) + dateStr.charCodeAt(i);
+                hash |= 0;
+            }
+            const suffix = Math.abs(hash).toString(36).slice(-6);
+
             eventsToInsert.push({
                 source_id: sourceId,
                 business_id: businessId,
                 title: enriched.title || event.title,
-                slug: slugify(enriched.title || event.title) + '-' + new Date().getTime().toString().slice(-6),
+                slug: slugify(enriched.title || event.title) + '-' + suffix,
                 start_time: event.start_time,
                 end_time: event.end_time,
                 description_raw: event.description,
