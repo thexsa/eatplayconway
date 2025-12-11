@@ -1,39 +1,28 @@
 
-import dotenv from 'dotenv';
-const result = dotenv.config({ path: '.env.local' });
-if (result.error) dotenv.config({ path: '.env' });
+import { createClient } from '@supabase/supabase-js'
+import dotenv from 'dotenv'
 
-import { createClient } from '@supabase/supabase-js';
+dotenv.config({ path: '.env.local' })
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-async function main() {
-    console.log('🔍 Listing Scrape Sources...');
-
-    // 1. List All Sources
-    const { data, error } = await supabase
+async function listSources() {
+    const { data: sources, error } = await supabase
         .from('scrape_sources')
-        .select('*');
+        .select('id, source_url, source_type, is_active')
 
     if (error) {
-        console.error("Error:", error);
-        return;
+        console.error(error)
+        return
     }
 
-    if (!data || data.length === 0) {
-        console.log("No sources found.");
-        return;
-    }
-
-    console.table(data.map(s => ({
-        id: s.id.slice(0, 8) + '...',
-        type: s.source_type,
-        url: s.source_url.slice(0, 50),
-        status: s.last_status,
-        active: s.is_active
-    })));
+    console.log('Active Sources:')
+    sources.forEach(s => {
+        console.log(`[${s.id}] (${s.is_active ? 'ACTIVE' : 'INACTIVE'}) ${s.source_url} (${s.source_type})`)
+    })
 }
 
-main();
+listSources()

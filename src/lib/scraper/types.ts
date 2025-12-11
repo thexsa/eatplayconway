@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type ScraperType = 'facebook_page' | 'instagram' | 'website_rss' | 'website_html' | 'gmb' | 'api_integration'
+export type ScraperType = 'facebook_page' | 'instagram' | 'website_rss' | 'website_html' | 'gmb' | 'api_integration' | 'calendar'
 
 export interface ScrapeJob {
     sourceId: string

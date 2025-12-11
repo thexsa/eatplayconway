@@ -83,7 +83,7 @@ export type Database = {
                 Row: {
                     id: string
                     business_id: string | null
-                    source_type: 'facebook_page' | 'instagram' | 'website_rss' | 'website_html' | 'gmb' | 'api_integration'
+                    source_type: 'facebook_page' | 'instagram' | 'website_rss' | 'website_html' | 'gmb' | 'api_integration' | 'calendar'
                     difficulty: 'easy' | 'hard'
                     source_url: string
                     config_json: Json | null

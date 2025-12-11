@@ -26,11 +26,13 @@ INSTRUCTIONS:
    - extract a specific image_url if one is explicitly mentioned in the text (rare), otherwise null.
 
 5. **Filtering**:
-   - **is_news**: Set to true if this is a news article, report, obituary, or past event recap. Set to false if it is an upcoming event.
-   - **is_conway**: Set to true ONLY if the event venue is in Conway, Arkansas. 
+   - **is_news**: Set to true ONLY if this is a general report, ranking update, or article without a specific future venue/time. 
+     - CRITICAL: If the item is an UPCOMING EVENT with a specific date and venue (e.g. "Concert at Simon Park on July 5th"), set is_news to FALSE. Do not tag events as news.
+   - **is_conway**: 
+     - FOR EVENTS: Set to true ONLY if the specific venue is in Conway, Arkansas.
+     - FOR NEWS: Set to true if the story is about Conway, UCA, Hendrix, or local issues.
      - CRITICAL: Do NOT assume it is in Conway just because the source is "The Conway Daily Sun". 
-     - Look for specific venue names (e.g. UCA, Hendrix, Toad Suck Park). 
-     - If the text mentions another city (e.g. "Little Rock", "Vilonia", "Stone Mountain"), set to false.
+     - If the text mentions another city (e.g. "Little Rock", "Vilonia", "Stone Mountain") as the primary focus, set to false.
 
 Respond with JSON only:
 {

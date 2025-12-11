@@ -17,7 +17,7 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
     const BLOCKLIST_REGEX = /obituary|death notice|funeral|memorial service|arrest|police log|jail/i;
 
     // Safety Filter for Non-Conway Locations (Hard block for obvious external cities)
-    const LOCATION_BLOCKLIST_REGEX = /little rock|north little rock|maumelle|benton|bryant|sherwood|cabot|vilonia|mayflower|stone mountain|hot springs/i;
+    const LOCATION_BLOCKLIST_REGEX = /little rock|north little rock|maumelle|benton|bryant|sherwood|cabot|vilonia|mayflower|stone mountain|hot springs|saline|magnolia|seacoast|conway daily sun/i;
 
     for (const event of events) {
         if (BLOCKLIST_REGEX.test(event.title) || BLOCKLIST_REGEX.test(event.description || '')) {
@@ -25,7 +25,7 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             continue;
         }
 
-        if (LOCATION_BLOCKLIST_REGEX.test(event.title)) {
+        if (LOCATION_BLOCKLIST_REGEX.test(event.title) || LOCATION_BLOCKLIST_REGEX.test(event.description || '')) {
             console.warn(`[Ingest] Blocking Non-Conway Location: ${event.title}`);
             continue;
         }
@@ -135,7 +135,7 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 slug: slugify(enriched.title || event.title) + '-' + suffix,
                 start_time: event.start_time,
                 end_time: event.end_time,
-                description_raw: event.description,
+                description_raw: event.description + (event.url ? `\n\nSource: ${event.url}` : ''),
                 description_summary: enriched.description_summary || event.description,
                 categories: enriched.categories,
                 is_family_friendly: enriched.is_family_friendly,

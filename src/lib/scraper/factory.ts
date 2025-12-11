@@ -1,11 +1,13 @@
 import { ScraperRunner, ScraperType } from './types';
 import { RssScraper } from './runners/rss';
-import { HtmlScraper } from './runners/html'; // Import the new runner
+import { HtmlScraper } from './runners/html';
+import { CalendarScraperRunner } from './runners/calendar'; // Import the new runner
 
 export class ScraperFactory {
     private static runners: ScraperRunner[] = [
         new RssScraper(),
-        new HtmlScraper(), // Register it here
+        new HtmlScraper(),
+        new CalendarScraperRunner(), // Register it here
     ];
 
     static getRunner(type: ScraperType): ScraperRunner {
