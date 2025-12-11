@@ -21,6 +21,7 @@ export async function getUpcomingEvents(limit: number = 20) {
             )
         `)
         .eq('status', 'published')
+        .not('categories', 'cs', '{"News"}') // Exclude News from main event feed
         .gte('start_time', new Date().toISOString())
         .order('start_time', { ascending: true })
         .limit(limit)
@@ -31,6 +32,31 @@ export async function getUpcomingEvents(limit: number = 20) {
     }
 
     return events as EventWithVenue[]
+}
+
+export async function getLatestNews(limit: number = 20) {
+    const supabase = await createClient()
+
+    const { data: news, error } = await supabase
+        .from('events')
+        .select(`
+            *,
+            businesses (
+                name,
+                slug
+            )
+        `)
+        .eq('status', 'published')
+        .contains('categories', ['News']) // Only News
+        .order('created_at', { ascending: false }) // News by ingestion time (freshness) or start_time? usually start_time for events, but news is " recent". Let's stick to start_time as "published date" proxy for now, or created_at. Let's use start_time as it maps to "article date" often.
+        .limit(limit)
+
+    if (error) {
+        console.error('Error fetching news:', error)
+        return []
+    }
+
+    return news as EventWithVenue[]
 }
 
 export async function getEventBySlug(slug: string) {

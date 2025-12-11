@@ -16,9 +16,17 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
     // Safety Filter for unwanted content (Obituaries, arrests, etc)
     const BLOCKLIST_REGEX = /obituary|death notice|funeral|memorial service|arrest|police log|jail/i;
 
+    // Safety Filter for Non-Conway Locations (Hard block for obvious external cities)
+    const LOCATION_BLOCKLIST_REGEX = /little rock|north little rock|maumelle|benton|bryant|sherwood|cabot|vilonia|mayflower|stone mountain|hot springs/i;
+
     for (const event of events) {
         if (BLOCKLIST_REGEX.test(event.title) || BLOCKLIST_REGEX.test(event.description || '')) {
             console.warn(`[Ingest] Blocking blocked content: ${event.title}`);
+            continue;
+        }
+
+        if (LOCATION_BLOCKLIST_REGEX.test(event.title)) {
+            console.warn(`[Ingest] Blocking Non-Conway Location: ${event.title}`);
             continue;
         }
 
@@ -50,9 +58,12 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
 
             // FILTERING LOGIC
             if (enriched.is_news) {
-                console.log(`[Ingest] Skipping News Item: ${event.title}`);
-                continue;
+                // Instead of skipping, we categorize it as News
+                console.log(`[Ingest] Tagging News Item: ${event.title}`);
+                if (!enriched.categories) enriched.categories = [];
+                if (!enriched.categories.includes('News')) enriched.categories.push('News');
             }
+
             if (enriched.is_conway === false) { // Strict check for false
                 console.log(`[Ingest] Skipping Non-Conway Event: ${event.title}`);
                 continue;

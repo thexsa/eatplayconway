@@ -27,7 +27,10 @@ INSTRUCTIONS:
 
 5. **Filtering**:
    - **is_news**: Set to true if this is a news article, report, obituary, or past event recap. Set to false if it is an upcoming event.
-   - **is_conway**: Set to true if the event takes place in Conway, Arkansas (or very close nearby, e.g. UCA campus). Set to false if it is elsewhere (e.g. Little Rock, National News).
+   - **is_conway**: Set to true ONLY if the event venue is in Conway, Arkansas. 
+     - CRITICAL: Do NOT assume it is in Conway just because the source is "The Conway Daily Sun". 
+     - Look for specific venue names (e.g. UCA, Hendrix, Toad Suck Park). 
+     - If the text mentions another city (e.g. "Little Rock", "Vilonia", "Stone Mountain"), set to false.
 
 Respond with JSON only:
 {
