@@ -1,63 +1,30 @@
-import { Tag, Clock, MapPin } from 'lucide-react'
-
-// Mock Deals
-const deals = [
-    {
-        id: '1',
-        title: 'Burger & Beer $12',
-        business: 'JJ\'s Grill',
-        type: 'Lunch Special',
-        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-        time: '11:00 AM - 3:00 PM',
-        description: 'Get our classic cheeseburger and a domestic draft for just $12 during lunch hours.'
-    },
-    {
-        id: '2',
-        title: 'Happy Hour: 1/2 Price Apps',
-        business: 'TGI Fridays',
-        type: 'Happy Hour',
-        days: ['Daily'],
-        time: '3:00 PM - 6:00 PM',
-        description: 'Half price on all appetizers and $4 draft beers.'
-    },
-    {
-        id: '3',
-        title: 'Kids Eat Free',
-        business: 'MarketPlace Grill',
-        type: 'Family Deal',
-        days: ['Tue'],
-        time: '5:00 PM - Close',
-        description: 'One free kids meal per adult entree purchase.'
-    }
-]
+import Link from 'next/link'
 
 export default function DealsPage() {
     return (
-                        </div >
+        <div className="min-h-screen bg-brand-cream pb-20">
+            {/* Header */}
+            <div className="bg-white/50 pt-32 pb-16 px-4 mb-12 border-b border-gray-100">
+                <div className="container mx-auto">
+                    <h1 className="font-serif text-5xl font-medium text-text-dark mb-4">Local Deals</h1>
+                    <p className="text-xl text-gray-600 font-sans max-w-2xl">
+                        Exclusive specials, happy hours, and coupons from Conway businesses.
+                    </p>
+                </div>
+            </div>
 
-                        <h3 className="mt-4 text-xl font-bold text-zinc-900 dark:text-zinc-50">{deal.title}</h3>
-                        <div className="mt-1 flex items-center gap-1 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                            <MapPin className="size-3.5" />
-                            {deal.business}
-                        </div>
-
-                        <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400 flex-1">
-                            {deal.description}
-                        </p>
-
-                        <div className="mt-6 flex items-center justify-between border-t pt-4 dark:border-zinc-800">
-                            <div className="flex items-center gap-2 text-xs text-zinc-500">
-                                <Clock className="size-3.5" />
-                                {deal.time}
-                            </div>
-                            <button className="text-sm font-semibold text-orange-600 hover:text-orange-500">
-                                View Details
-                            </button>
-                        </div>
-                    </div >
-                ))
-}
-            </div >
-        </div >
+            <div className="container mx-auto px-4 text-center py-20">
+                <div className="bg-white rounded-3xl p-12 shadow-sm border border-gray-100 max-w-2xl mx-auto">
+                    <h2 className="font-serif text-3xl font-medium text-text-dark mb-4">Coming Soon</h2>
+                    <p className="text-gray-600 mb-8">
+                        We're currently onboarding local businesses to bring you the best deals in town.
+                        Check back later!
+                    </p>
+                    <Link href="/" className="inline-block rounded-full bg-brand-orange px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-red transition-colors">
+                        Back to Home
+                    </Link>
+                </div>
+            </div>
+        </div>
     )
 }
