@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Database, Calendar, Check, Settings, Users, BarChart3, Globe } from 'lucide-react'
+import { LayoutDashboard, Database, Calendar, Check, Settings, Users, BarChart3, Globe, Building2 } from 'lucide-react'
 import { clsx } from 'clsx'
 
 const navigation = [
@@ -37,7 +37,11 @@ export function AdminSidebar() {
                                 : 'text-gray-600 hover:bg-brand-cream hover:text-text-dark'
                                 }`}
                         >
-                            <link.icon className="size-4" />
+                            {link.name === 'Businesses' ? (
+                                <Building2 className="size-4" />
+                            ) : (
+                                <link.icon className="size-4" />
+                            )}
                             {link.name}
                         </Link>
                     )

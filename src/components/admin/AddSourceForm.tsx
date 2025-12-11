@@ -77,9 +77,10 @@ export function AddSourceForm() {
                             name="type"
                             className="block w-full rounded-md border-0 py-1.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 focus:ring-2 focus:ring-inset focus:ring-zinc-900 sm:text-sm sm:leading-6 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-zinc-700"
                         >
-                            <option value="rss">RSS Feed</option>
-                            <option value="json">JSON API</option>
-                            <option value="html">HTML Scrape</option>
+                            <option value="website_rss">RSS Feed</option>
+                            <option value="website_html">Website (AI Scraper)</option>
+                            <option value="facebook_page">Facebook Page</option>
+                            <option value="instagram">Instagram</option>
                         </select>
                     </div>
                 </div>
