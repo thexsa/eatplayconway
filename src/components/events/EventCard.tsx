@@ -27,9 +27,7 @@ export function EventCard({ event }: { event: { title: string, start_time: strin
                         <Calendar className="size-16" />
                     </div>
                 )}
-                <div className="absolute top-3 right-3 rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wider text-text-dark shadow-sm backdrop-blur-sm">
-                    Ticketed
-                </div>
+                {/* Badge Removed */}
             </div>
 
             <div className="flex flex-1 flex-col p-5">
@@ -54,7 +52,7 @@ export function EventCard({ event }: { event: { title: string, start_time: strin
                                 ? 'Free Entry'
                                 : minPrice
                                     ? `$${minPrice}` + (maxPrice ? ` - $${maxPrice}` : '+')
-                                    : 'Ticketed'}
+                                    : 'See Details'}
                         </span>
                     </div>
                 </div>

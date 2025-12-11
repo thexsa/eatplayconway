@@ -47,14 +47,36 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             }
 
 
-            // Default Images (Conway/Arkansas aesthetic)
-            const DEFAULT_IMAGES = [
-                'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80', // Party/people
-                'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80', // Crowd
-                'https://images.unsplash.com/photo-1470229722913-7ea051c24d80?auto=format&fit=crop&q=80', // Concert
-                'https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80', // Conversation
-                'https://images.unsplash.com/photo-1561489413-985b06da5bee?auto=format&fit=crop&q=80'  // Abstract lights
-            ];
+            // Smart Default Images based on context
+            const DEFAULT_IMAGES = {
+                music: [
+                    'https://images.unsplash.com/photo-1470229722913-7ea051c24d80?auto=format&fit=crop&q=80', // Concert crowd
+                    'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&q=80', // Live band
+                    'https://images.unsplash.com/photo-1501612780327-45045538702b?auto=format&fit=crop&q=80', // Guitar close up
+                ],
+                food: [
+                    'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80', // Plated food
+                    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80', // BBQ/Grill
+                    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80', // Pizza
+                ],
+                art: [
+                    'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&q=80', // Gallery
+                    'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80', // Paint
+                ],
+                family: [
+                    'https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80', // Talking/Community
+                    'https://images.unsplash.com/photo-1596464716127-f9a085960789?auto=format&fit=crop&q=80', // Park
+                ],
+                holiday: [
+                    'https://images.unsplash.com/photo-1512389142860-9c449ded37aa?auto=format&fit=crop&q=80', // Lights
+                    'https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&q=80', // Ornament
+                ],
+                generic: [
+                    'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80', // Crowd generic
+                    'https://images.unsplash.com/photo-1561489413-985b06da5bee?auto=format&fit=crop&q=80', // Abstract
+                    'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80', // Party
+                ]
+            };
 
             // Deterministic Slug Suffix (Hash of start_time) to survive rebuilds
             // Simple string hash function
@@ -69,9 +91,18 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             // final fallback logic
             let finalImage = enriched.image_url || event.image_url;
             if (!finalImage) {
-                // Deterministic random image based on title length
-                const index = (event.title?.length || 0) % DEFAULT_IMAGES.length;
-                finalImage = DEFAULT_IMAGES[index];
+                const text = (event.title + ' ' + event.description).toLowerCase();
+                let pool = DEFAULT_IMAGES.generic;
+
+                if (text.includes('music') || text.includes('concert') || text.includes('band') || text.includes('live')) pool = DEFAULT_IMAGES.music;
+                else if (text.includes('food') || text.includes('drink') || text.includes('truck') || text.includes('pizza') || text.includes('bbq')) pool = DEFAULT_IMAGES.food;
+                else if (text.includes('art') || text.includes('gallery') || text.includes('paint') || text.includes('museum')) pool = DEFAULT_IMAGES.art;
+                else if (text.includes('christmas') || text.includes('holiday') || text.includes('santa') || text.includes('lights')) pool = DEFAULT_IMAGES.holiday;
+                else if (text.includes('family') || text.includes('kid') || text.includes('park')) pool = DEFAULT_IMAGES.family;
+
+                // Deterministic selection from pool
+                const index = (event.title?.length || 0) % pool.length;
+                finalImage = pool[index];
             }
 
             eventsToInsert.push({
