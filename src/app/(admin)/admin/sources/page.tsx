@@ -2,6 +2,8 @@ import { Plus, RefreshCcw } from 'lucide-react'
 import { getAllSources } from '@/lib/api/admin'
 import Link from 'next/link'
 
+import { SourceActionButtons, SourceToggleConfig } from '@/components/admin/SourceActions'
+
 export default async function SourcesPage() {
     const sources = await getAllSources()
 
@@ -24,9 +26,9 @@ export default async function SourcesPage() {
                     <h1 className="text-2xl font-bold tracking-tight">Data Sources</h1>
                     <p className="text-zinc-500 dark:text-zinc-400">Manage {sources?.length || 0} automated scrapers and integrations.</p>
                 </div>
-                <button className="flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200">
+                <Link href="/admin/sources/new" className="flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200">
                     <Plus className="size-4" /> Add Source
-                </button>
+                </Link>
             </div>
 
             <div className="rounded-xl border bg-white shadow-sm dark:bg-zinc-900 dark:border-zinc-800 overflow-hidden">
@@ -57,12 +59,7 @@ export default async function SourcesPage() {
                                 </td>
                                 <td className="px-6 py-4 text-zinc-500">Every {source.frequency_hours}h</td>
                                 <td className="px-6 py-4">
-                                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${source.is_active
-                                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                        : 'bg-zinc-100 text-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-400'
-                                        }`}>
-                                        {source.is_active ? 'Active' : 'Paused'}
-                                    </span>
+                                    <SourceToggleConfig id={source.id} isActive={source.is_active || false} />
                                 </td>
                                 <td className="px-6 py-4 text-zinc-500">
                                     <div className="flex items-center gap-2">
@@ -75,9 +72,7 @@ export default async function SourcesPage() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <button className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
-                                        <RefreshCcw className="size-4" />
-                                    </button>
+                                    <SourceActionButtons id={source.id} />
                                 </td>
                             </tr>
                         ))}

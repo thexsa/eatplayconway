@@ -21,3 +21,5 @@ export class ScraperFactory {
         return runner;
     }
 }
+
+export const getScraper = (type: ScraperType) => ScraperFactory.getRunner(type);

@@ -60,6 +60,10 @@ export default async function EventsQueuePage() {
                                     <Link href={`/events/${event.slug}`} target="_blank" className="p-1 text-zinc-400 hover:text-blue-500">
                                         <Eye className="size-4" />
                                     </Link>
+                                    <Link href={`/admin/events/${event.id}/edit`} className="p-1 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100">
+                                        <div className="sr-only">Edit</div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pencil size-4"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></svg>
+                                    </Link>
                                     <EventActionButtons eventId={event.id} />
                                 </td>
                             </tr>
