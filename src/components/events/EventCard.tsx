@@ -13,48 +13,48 @@ export function EventCard({ event }: { event: EventWithVenue }) {
     return (
         <Link
             href={`/events/${event.slug}`}
-            className="group relative flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-all hover:shadow-md dark:bg-zinc-900 dark:border-zinc-800"
+            className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-orange/20"
         >
-            <div className="relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
                 {event.image_url ? (
                     <img
                         src={event.image_url} // eslint-disable-line @next/next/no-img-element
                         alt={event.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                 ) : (
-                    <div className="flex h-full items-center justify-center text-zinc-400">
-                        <Calendar className="size-10 opacity-20" />
+                    <div className="flex h-full items-center justify-center text-brand-orange/40 bg-brand-cream">
+                        <Calendar className="size-12" />
                     </div>
                 )}
-                <div className="absolute top-2 right-2 rounded-full bg-white/90 px-2 py-1 text-xs font-semibold uppercase text-zinc-900 backdrop-blur-sm dark:bg-zinc-950/90 dark:text-zinc-50">
+                <div className="absolute top-3 right-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold uppercase tracking-wider text-text-dark backdrop-blur-sm shadow-sm">
                     {category}
                 </div>
             </div>
 
-            <div className="flex flex-1 flex-col p-4">
-                <div className="mb-2 text-xs font-medium text-orange-600 dark:text-orange-500">
+            <div className="flex flex-1 flex-col p-5">
+                <div className="mb-2 text-xs font-bold uppercase tracking-wide text-brand-red">
                     {format(startDate, 'EEE, MMM d • h:mm a')}
                 </div>
 
-                <h3 className="mb-2 text-lg font-bold leading-tight text-zinc-900 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-500">
+                <h3 className="mb-3 font-serif text-xl font-medium leading-tight text-text-dark transition-colors group-hover:text-brand-orange line-clamp-2">
                     {event.title}
                 </h3>
 
-                <div className="mt-auto flex flex-col gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                    <div className="flex items-center gap-1.5">
-                        <MapPin className="size-4" />
+                <div className="mt-auto flex flex-col gap-2 text-sm text-gray-500">
+                    <div className="flex items-center gap-2">
+                        <MapPin className="size-4 text-brand-yellow" />
                         <span className="line-clamp-1">{venueName}</span>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
-                        <Ticket className="size-4" />
+                    <div className="flex items-center gap-2">
+                        <Ticket className="size-4 text-brand-orange" />
                         <span>
                             {minPrice === 0
-                                ? 'Free'
+                                ? 'Free Entry'
                                 : minPrice
-                                    ? `$${minPrice}` + (maxPrice ? ` - $${maxPrice}` : '')
-                                    : 'See Details'}
+                                    ? `$${minPrice}` + (maxPrice ? ` - $${maxPrice}` : '+')
+                                    : 'Ticketed'}
                         </span>
                     </div>
                 </div>
