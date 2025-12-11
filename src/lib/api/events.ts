@@ -43,15 +43,15 @@ export async function getEventBySlug(slug: string) {
             businesses (
                 name,
                 address,
-                slug,
-                geo_lat,
-                geo_lng
+                slug
             )
         `)
         .eq('slug', slug)
         .single()
 
     if (error) {
+        console.error(`[getEventBySlug] Error fetching slug '${slug}':`, error)
+        // Also log if data was null despite no error (shouldn't happen with .single())
         return null
     }
 
