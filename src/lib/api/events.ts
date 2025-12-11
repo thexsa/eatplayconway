@@ -6,32 +6,31 @@ export type EventWithVenue = EventRow & {
     businesses: Database['public']['Tables']['businesses']['Row'] | null
 }
 
-export async function getUpcomingEvents() {
+export async function getUpcomingEvents(limit: number = 20) {
     const supabase = await createClient()
 
     // Fetch upcoming events, sorted by date
     // We also join with 'businesses' to get venue name
-    const { data, error } = await supabase
+    const { data: events, error } = await supabase
         .from('events')
         .select(`
             *,
             businesses (
                 name,
-                address,
                 slug
             )
         `)
         .eq('status', 'published')
         .gte('start_time', new Date().toISOString())
         .order('start_time', { ascending: true })
-        .limit(20)
+        .limit(limit)
 
     if (error) {
-        console.error('Error fetching events:', error)
+        console.error('Error fetching upcoming events:', error)
         return []
     }
 
-    return data as EventWithVenue[]
+    return events as EventWithVenue[]
 }
 
 export async function getEventBySlug(slug: string) {

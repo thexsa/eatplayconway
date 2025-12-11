@@ -1,52 +1,50 @@
 import Link from 'next/link'
-import { Search, Menu, Calendar, MapPin } from 'lucide-react'
+import { Menu, Search, X } from 'lucide-react'
 
 export function Header() {
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-zinc-950/80 dark:border-zinc-800">
-            <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                {/* Logo */}
-                <div className="flex items-center gap-2">
-                    <Link href="/" className="flex items-center gap-2">
-                        <div className="size-8 rounded-lg bg-orange-500 flex items-center justify-center text-white font-bold">
-                            EP
-                        </div>
-                        <span className="hidden font-bold text-xl tracking-tight sm:inline-block">
-                            EatPlay<span className="text-orange-500">Conway</span>
-                        </span>
-                    </Link>
-                </div>
+        <header className="fixed top-0 left-0 right-0 z-50 bg-brand-cream/80 backdrop-blur-md border-b border-gray-100">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+                <div className="flex h-20 items-center justify-between">
+                    {/* Logo */}
+                    <div className="flex lg:flex-1">
+                        <Link href="/" className="-m-1.5 p-1.5 font-serif text-2xl font-bold tracking-tight text-text-dark hover:text-brand-orange transition-colors">
+                            EatPlayConway
+                        </Link>
+                    </div>
 
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-6">
-                    <Link href="/events" className="text-sm font-medium hover:text-orange-500 transition-colors">
-                        Events
-                    </Link>
-                    <Link href="/deals" className="text-sm font-medium hover:text-orange-500 transition-colors">
-                        Deals
-                    </Link>
-                    <Link href="/guides" className="text-sm font-medium hover:text-orange-500 transition-colors">
-                        Guides
-                    </Link>
-                    <Link href="/submit" className="text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
-                        Submit Event
-                    </Link>
-                </nav>
+                    {/* Desktop Nav */}
+                    <div className="hidden lg:flex lg:gap-x-12">
+                        <Link href="/events" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            Events
+                        </Link>
+                        <Link href="/deals" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            Deals
+                        </Link>
+                        <Link href="/guides" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            Guides
+                        </Link>
+                        <Link href="/about" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            About
+                        </Link>
+                    </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                    <button className="p-2 text-zinc-500 hover:bg-zinc-100 rounded-full dark:hover:bg-zinc-800 transition-colors">
-                        <Search className="size-5" />
-                    </button>
-                    <button className="md:hidden p-2 text-zinc-900 hover:bg-zinc-100 rounded-lg dark:text-zinc-50 dark:hover:bg-zinc-800">
-                        <Menu className="size-5" />
-                    </button>
-                    <Link
-                        href="/login"
-                        className="hidden sm:inline-flex h-9 items-center justify-center rounded-full bg-zinc-900 px-4 text-sm font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300"
-                    >
-                        Business Login
-                    </Link>
+                    {/* Right Actions */}
+                    <div className="flex flex-1 items-center justify-end gap-x-6">
+                        <button className="text-text-dark hover:text-brand-orange transition-colors">
+                            <Search className="size-5" />
+                        </button>
+                        <Link
+                            href="/submit"
+                            className="hidden lg:block rounded-full bg-text-dark px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-orange transition-colors duration-300"
+                        >
+                            Submit Event
+                        </Link>
+                        {/* Mobile Menu Button - Placeholder for real implementation */}
+                        <button className="lg:hidden text-text-dark">
+                            <Menu className="size-6" />
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>

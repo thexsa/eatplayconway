@@ -1,106 +1,88 @@
-
-import { EventCard } from '@/components/events/EventCard'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import { getUpcomingEvents } from '@/lib/api/events'
+import { Calendar, MapPin, ArrowRight } from 'lucide-react'
 
 export default async function HomePage() {
-    const featuredEvents = await getUpcomingEvents()
+    const events = await getUpcomingEvents(9)
 
     return (
-        <div className="flex flex-col gap-16 pb-20">
+        <div className="min-h-screen bg-brand-cream">
             {/* Hero Section */}
-            <section className="relative overflow-hidden bg-slate-900 py-24 sm:py-32">
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1519750783826-e2420f4d687f?q=80&w=3388&auto=format&fit=crop"
-                        alt="Conway Background"
-                        className="h-full w-full object-cover opacity-20"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                </div>
+            <section className="relative overflow-hidden pt-20 pb-32">
+                {/* Geometric Shapes */}
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-brand-orange opacity-20 blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-brand-red opacity-10 blur-3xl"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-brand-yellow opacity-10 blur-3xl"></div>
 
-                <div className="container relative z-10 mx-auto px-4 text-center">
-                    <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl">
-                        Never Miss Out on <span className="text-orange-500">Conway.</span>
+                <div className="relative mx-auto max-w-7xl px-6 lg:px-8 text-center">
+                    <h1 className="font-serif text-5xl font-medium tracking-tight text-text-dark sm:text-7xl mb-6">
+                        Discover Conway’s <br />
+                        <span className="italic relative inline-block">
+                            <span className="relative z-10">Best Moments</span>
+                            <span className="absolute bottom-2 left-0 w-full h-3 bg-brand-yellow/50 -rotate-1 z-0"></span>
+                        </span>
                     </h1>
-                    <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300">
-                        The automated guide to everything happening in the City of Colleges.
-                        Events, deals, and weekend guides curated just for you.
+                    <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 font-sans">
+                        Your curated guide to events, local eats, and hidden gems in Conway, Arkansas. Automatically updated daily.
                     </p>
-                    <div className="mt-10 flex justify-center gap-4">
-                        <Link
-                            href="/events"
-                            className="rounded-full bg-orange-600 px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-                        >
-                            Browse Events
+                    <div className="mt-10 flex items-center justify-center gap-x-6">
+                        <Link href="/events" className="rounded-full bg-brand-red px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-orange transition-colors duration-300">
+                            Explore Events
                         </Link>
-                        <Link
-                            href="/guides"
-                            className="rounded-full bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm hover:bg-white/20"
-                        >
-                            See Weekend Guide
+                        <Link href="/deals" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            Find Deals <span aria-hidden="true">→</span>
                         </Link>
                     </div>
                 </div>
             </section>
 
-            {/* Events Grid */}
-            <section className="container mx-auto px-4">
-                <div className="mb-8 flex items-end justify-between">
-                    <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Happening Soon</h2>
-                        <p className="mt-2 text-zinc-500 dark:text-zinc-400">Top picks for you in Conway this week.</p>
-                    </div>
-                    <Link href="/events" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-orange-600 hover:text-orange-500">
-                        View all <ArrowRight className="size-4" />
-                    </Link>
-                </div>
-
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {featuredEvents.length > 0 ? (
-                        featuredEvents.map((event) => (
-                            <EventCard key={event.id} event={event} />
-                        ))
-                    ) : (
-                        <div className="col-span-full py-12 text-center text-zinc-500">
-                            No upcoming events found. Check back soon!
-                        </div>
-                    )}
-                </div>
-
-                <div className="mt-8 sm:hidden">
-                    <Link href="/events" className="flex items-center justify-center gap-2 rounded-lg border py-3 text-sm font-semibold">
-                        View all events <ArrowRight className="size-4" />
-                    </Link>
-                </div>
-            </section>
-
-            {/* Featured Deals Teaser */}
-            <section className="bg-orange-50 py-16 dark:bg-zinc-900/50">
-                <div className="container mx-auto px-4">
-                    <div className="flex flex-col items-center text-center">
-                        <h2 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">Local Deals & Specials</h2>
-                        <p className="mt-4 max-w-2xl text-zinc-600 dark:text-zinc-400">
-                            Save money at your favorite local spots. Happy hours, lunch specials, and exclusive coupons.
-                        </p>
-                        <div className="mt-8 grid w-full gap-4 sm:grid-cols-3">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="flex flex-col items-start rounded-xl bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border dark:border-zinc-800">
-                                    <span className="mb-4 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                        Lunch Special
-                                    </span>
-                                    <h3 className="text-lg font-bold">Burger & Beer $12</h3>
-                                    <p className="text-sm text-zinc-500">JJ&apos;s Grill</p>
-                                </div>
-                            ))}
-                        </div>
-                        <Link
-                            href="/deals"
-                            className="mt-10 font-semibold text-orange-600 hover:text-orange-500 underline decoration-2 underline-offset-4"
-                        >
-                            See all 42 active deals
+            {/* Event Grid */}
+            <section className="py-24 bg-white/50 backdrop-blur-sm">
+                <div className="mx-auto max-w-7xl px-6 lg:px-8">
+                    <div className="flex items-center justify-between mb-12">
+                        <h2 className="font-serif text-3xl font-medium text-text-dark">Happening This Week</h2>
+                        <Link href="/events" className="text-sm font-medium text-brand-red hover:text-brand-orange flex items-center gap-1">
+                            View all <ArrowRight className="size-4" />
                         </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+                        {events.map((event) => (
+                            <Link key={event.slug} href={`/events/${event.slug}`} className="group block">
+                                <article className="flex flex-col h-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
+                                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-100 mb-4">
+                                        {event.image_url ? (
+                                            <img
+                                                src={event.image_url}
+                                                alt={event.title}
+                                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full items-center justify-center bg-brand-cream text-brand-orange">
+                                                <Calendar className="h-12 w-12 opacity-50" />
+                                            </div>
+                                        )}
+                                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-text-dark shadow-sm">
+                                            {event.price_type === 'free' ? 'Free' : 'Ticketed'}
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col flex-1">
+                                        <div className="flex items-center gap-x-4 text-xs font-bold text-brand-red mb-2 font-sans uppercase tracking-wide">
+                                            <time dateTime={event.start_time}>
+                                                {new Date(event.start_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                            </time>
+                                        </div>
+                                        <h3 className="font-serif text-xl font-medium text-text-dark group-hover:text-brand-orange transition-colors line-clamp-2 mb-2">
+                                            {event.title}
+                                        </h3>
+                                        <div className="flex items-center gap-2 text-sm text-gray-500 mt-auto">
+                                            <MapPin className="size-4 text-brand-yellow" />
+                                            <span className="truncate">{event.businesses?.name || 'Various Locations'}</span>
+                                        </div>
+                                    </div>
+                                </article>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </section>
