@@ -10,7 +10,7 @@ function SubmitButton({ icon: Icon, label }: { icon: any, label: string }) {
         <button
             type="submit"
             disabled={pending}
-            className={`p-1 text-zinc-400 disabled:opacity-50 ${label === 'Approve' ? 'hover:text-green-500' : 'hover:text-red-500'}`}
+            className={`p-1 text-gray-400 disabled:opacity-50 transition-colors ${label === 'Approve' ? 'hover:text-green-500' : 'hover:text-red-500'}`}
             title={label}
         >
             {pending ? (

@@ -12,8 +12,8 @@ export function SourceToggleConfig({ id, isActive }: { id: string, isActive: boo
             onClick={() => startTransition(async () => { await toggleSource(id, isActive) })}
             disabled={isPending}
             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${isActive
-                ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400'
-                : 'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-900/30 dark:text-zinc-400'
+                ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                 }`}
         >
             {isActive ? 'Active' : 'Paused'}
@@ -30,7 +30,7 @@ export function SourceActionButtons({ id }: { id: string }) {
                 onClick={() => startTransition(async () => { await runSource(id) })}
                 disabled={isPending}
                 title="Run Scraper Now"
-                className="text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-50"
+                className="text-gray-400 hover:text-blue-600 disabled:opacity-50 transition-colors"
             >
                 <RefreshCcw className={`size-4 ${isPending ? 'animate-spin' : ''}`} />
             </button>
@@ -42,7 +42,7 @@ export function SourceActionButtons({ id }: { id: string }) {
                 }}
                 disabled={isPending}
                 title="Delete Source"
-                className="text-zinc-400 hover:text-red-600 dark:hover:text-red-400 disabled:opacity-50"
+                className="text-gray-400 hover:text-red-600 disabled:opacity-50 transition-colors"
             >
                 <Trash2 className="size-4" />
             </button>
