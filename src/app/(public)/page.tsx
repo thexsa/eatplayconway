@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { getUpcomingEvents } from '@/lib/api/events'
 import { Calendar, MapPin, ArrowRight } from 'lucide-react'
 
+export const dynamic = 'force-dynamic' // Disable caching to ensure fresh events/slugs
+
 export default async function HomePage() {
     const events = await getUpcomingEvents(9)
 
