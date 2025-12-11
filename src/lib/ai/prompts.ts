@@ -17,12 +17,17 @@ INSTRUCTIONS:
    - Outdoor Activities
    - College / UCA
    - Community / Nonprofit
+   - Community / Nonprofit
    - Other
 
 4. **Metadata**: 
    - Extract ticket price range (min/max). If it says "Free", price is 0. If unknown, leave null.
    - Determine if it is family friendly.
    - extract a specific image_url if one is explicitly mentioned in the text (rare), otherwise null.
+
+5. **Filtering**:
+   - **is_news**: Set to true if this is a news article, report, obituary, or past event recap. Set to false if it is an upcoming event.
+   - **is_conway**: Set to true if the event takes place in Conway, Arkansas (or very close nearby, e.g. UCA campus). Set to false if it is elsewhere (e.g. Little Rock, National News).
 
 Respond with JSON only:
 {
@@ -33,6 +38,8 @@ Respond with JSON only:
   "price_max": number | null,
   "is_family_friendly": boolean,
   "confidence_score": number, // 0.0 to 1.0
-  "image_url": string | null
+  "image_url": string | null,
+  "is_news": boolean,
+  "is_conway": boolean
 }
 `;

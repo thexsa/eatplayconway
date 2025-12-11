@@ -110,7 +110,11 @@ export default async function EventDetailsPage({
                                 <div>
                                     <div className="font-serif text-lg font-medium text-text-dark">Price</div>
                                     <div className="mt-1 font-sans text-gray-600">
-                                        {event.price_min === 0 ? 'Free Entry' : `$${event.price_min}+`}
+                                        {event.price_min === 0
+                                            ? 'Free Entry'
+                                            : event.price_min
+                                                ? `$${event.price_min}+`
+                                                : 'See Details'}
                                     </div>
                                 </div>
                             </div>

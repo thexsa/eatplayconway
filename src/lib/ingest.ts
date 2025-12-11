@@ -42,8 +42,20 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                     confidence_score: 0.5, // Lower confidence
                     price_min: null,
                     price_max: null,
-                    image_url: null
+                    image_url: null,
+                    is_news: false,
+                    is_conway: true // Assume true if unsure to be safe
                 };
+            }
+
+            // FILTERING LOGIC
+            if (enriched.is_news) {
+                console.log(`[Ingest] Skipping News Item: ${event.title}`);
+                continue;
+            }
+            if (enriched.is_conway === false) { // Strict check for false
+                console.log(`[Ingest] Skipping Non-Conway Event: ${event.title}`);
+                continue;
             }
 
 
