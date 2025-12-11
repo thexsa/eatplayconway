@@ -117,9 +117,23 @@ export default async function EventDetailsPage({
                         </div>
 
                         <div className="mt-10 space-y-3">
-                            <button className="w-full rounded-full bg-brand-orange px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-red transition-colors duration-300">
-                                Get Tickets / RSVP
-                            </button>
+                            {/* 
+                            <a 
+                                href={event.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center w-full rounded-full bg-brand-orange px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-red transition-colors duration-300"
+                            >
+                                Read Original Article
+                            </a>
+                            */}
+
+                            {(event.price_min && event.price_min > 0) ? (
+                                <button className="w-full flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-transparent px-8 py-3.5 text-sm font-semibold text-text-dark hover:bg-gray-50 transition-colors">
+                                    <Ticket className="size-4" /> Get Tickets
+                                </button>
+                            ) : null}
+
                             <button className="w-full flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-transparent px-8 py-3.5 text-sm font-semibold text-text-dark hover:bg-gray-50 transition-colors">
                                 <Share2 className="size-4" /> Share Event
                             </button>

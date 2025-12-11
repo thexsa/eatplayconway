@@ -26,21 +26,25 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             // Let's try to enrich, if fail, fallback to raw.
             let enriched: any;
 
-            // BYPASS AI ENRICHMENT FOR DEBUGGING/SPEED
-            // The SDK retries 429s for too long. We need data now.
-            // console.log(`Enriched ${event.title}. Sleeping 10s...`);
-            // await new Promise(resolve => setTimeout(resolve, 10000));
-            enriched = {
-                title: event.title,
-                description_summary: event.description,
-                categories: ['Event'],
-                is_family_friendly: true,
-                confidence_score: 1.0, // Force publish
-                price_min: null,
-                price_max: null,
-                image_url: null
-            };
-            console.log(`Skipped enrichment for ${event.title} (Fast Mode)`);
+            try {
+                // Rate Limiting: Sleep 2s to be nice to Gemini Free Tier (approx 15-30 RPM)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                enriched = await enrichEvent(event);
+            } catch (aiError) {
+                console.warn(`[Ingest] AI Enrichment failed for ${event.title}, using raw data.`, aiError);
+                // Fallback to raw data with minimal defaults
+                enriched = {
+                    title: event.title,
+                    description_summary: event.description,
+                    categories: ['Event'], // AI would have given better categories
+                    is_family_friendly: true,
+                    confidence_score: 0.5, // Lower confidence
+                    price_min: null,
+                    price_max: null,
+                    image_url: null
+                };
+            }
 
 
             // Default Images (Conway/Arkansas aesthetic)
