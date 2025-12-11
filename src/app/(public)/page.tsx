@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getUpcomingEvents } from '@/lib/api/events'
 import { Calendar, MapPin, ArrowRight } from 'lucide-react'
+import { EventCard } from '@/components/events/EventCard'
 
 export const dynamic = 'force-dynamic' // Disable caching to ensure fresh events/slugs
 
@@ -50,40 +51,7 @@ export default async function HomePage() {
 
                     <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                         {events.map((event) => (
-                            <Link key={event.slug} href={`/events/${event.slug}`} className="group block">
-                                <article className="flex flex-col h-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
-                                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-100 mb-4">
-                                        {event.image_url ? (
-                                            <img
-                                                src={event.image_url}
-                                                alt={event.title}
-                                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center bg-brand-cream text-brand-orange">
-                                                <Calendar className="h-12 w-12 opacity-50" />
-                                            </div>
-                                        )}
-                                        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-text-dark shadow-sm">
-                                            {event.price_type === 'free' ? 'Free' : 'Ticketed'}
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col flex-1">
-                                        <div className="flex items-center gap-x-4 text-xs font-bold text-brand-red mb-2 font-sans uppercase tracking-wide">
-                                            <time dateTime={event.start_time}>
-                                                {new Date(event.start_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                                            </time>
-                                        </div>
-                                        <h3 className="font-serif text-xl font-medium text-text-dark group-hover:text-brand-orange transition-colors line-clamp-2 mb-2">
-                                            {event.title}
-                                        </h3>
-                                        <div className="flex items-center gap-2 text-sm text-gray-500 mt-auto">
-                                            <MapPin className="size-4 text-brand-yellow" />
-                                            <span className="truncate">{event.businesses?.name || 'Various Locations'}</span>
-                                        </div>
-                                    </div>
-                                </article>
-                            </Link>
+                            <EventCard key={event.id} event={event} />
                         ))}
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Calendar, MapPin, Ticket } from 'lucide-react'
+import { Calendar, MapPin, Info } from 'lucide-react'
 import { format } from 'date-fns'
 import { EventWithVenue } from '@/lib/api/events'
 
@@ -46,7 +46,7 @@ export function EventCard({ event }: { event: { title: string, start_time: strin
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Ticket className="size-4 text-brand-orange" />
+                        <Info className="size-4 text-brand-orange" />
                         <span>
                             {minPrice === 0
                                 ? 'Free Entry'
