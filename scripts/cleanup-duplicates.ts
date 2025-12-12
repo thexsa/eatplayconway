@@ -83,7 +83,7 @@ async function cleanup() {
                 // Or check if one contains the other words
                 const wordsA = keeper.title.toLowerCase().split(' ');
                 const wordsB = candidate.title.toLowerCase().split(' ');
-                const intersection = wordsA.filter(w => wordsB.includes(w));
+                const intersection = wordsA.filter((w: string) => wordsB.includes(w));
                 const wordOverlap = intersection.length / Math.min(wordsA.length, wordsB.length);
 
                 if (similarity > 0.5 || wordOverlap > 0.6) {
