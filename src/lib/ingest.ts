@@ -66,7 +66,7 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             }
 
             // --- CATEGORY & DATE FILTERING ---
-            const eventDate = new Date(event.start_time);
+            let eventDate = new Date(event.start_time);
 
             if (enriched.is_news) {
                 if (!enriched.categories) enriched.categories = [];
@@ -76,9 +76,9 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 const now = new Date();
                 const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 3-day buffer
                 if (eventDate > threeDaysFromNow) {
-                    console.log(`[Ingest] Correcting Future News Date: ${eventDate.toISOString()} -> Previous Year`);
-                    eventDate.setFullYear(eventDate.getFullYear() - 1);
-                    // Update the event object start_time so it persists
+                    console.log(`[Ingest] Correcting Future News Date: ${eventDate.toISOString()} -> Clamping to Now`);
+                    // Clamp to Now so it appears as "Just Published"
+                    eventDate = new Date();
                     event.start_time = eventDate.toISOString();
                 }
 
