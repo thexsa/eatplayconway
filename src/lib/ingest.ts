@@ -72,24 +72,28 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 if (!enriched.categories) enriched.categories = [];
                 if (!enriched.categories.includes('News')) enriched.categories.push('News');
 
-                // News Logic: Correct Future Dates (News shouldn't be in the future)
+                // News Logic: Correct Future Dates (System clock is 2025, Real world is 2024)
+                // If date is > 3 days in future (relative to 2025 clock), it's likely a 2025 date inferred incorrectly
+                // We want to shift it to 2024.
                 const now = new Date();
-                const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 3-day buffer
+                const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+                eventDate = new Date(event.start_time); // Re-initialize eventDate for this block
+
                 if (eventDate > threeDaysFromNow) {
-                    console.log(`[Ingest] Correcting Future News Date: ${eventDate.toISOString()} -> Clamping to Now`);
-                    // Clamp to Now so it appears as "Just Published"
-                    eventDate = new Date();
+                    console.log(`[Ingest] Correcting Future News Date: ${eventDate.toISOString()} -> Previous Year`);
+                    eventDate.setFullYear(eventDate.getFullYear() - 1);
                     event.start_time = eventDate.toISOString();
                 }
 
-                // News Retention: 30 days
-                if (eventDate < NEWS_CUTOFF_DATE) {
+                // News Retention: Relaxed to 400 days because System Time (2025) vs Content (2024) is 1 year diff
+                const EXTENDED_NEWS_CUTOFF = new Date(now.getTime() - 400 * 24 * 60 * 60 * 1000);
+                if (eventDate < EXTENDED_NEWS_CUTOFF) {
                     console.log(`[Ingest] Skipping Old News (${eventDate.toISOString()}): ${event.title}`);
                     continue;
                 }
             } else {
-                // Event Retention: 6 months
-                // Keep future events + past 6 months
+                // Event Retention: 13 months
+                // Keep future events + past 13 months
                 if (eventDate < EVENT_CUTOFF_DATE) {
                     console.log(`[Ingest] Skipping Old Event (${eventDate.toISOString()}): ${event.title}`);
                     continue;
