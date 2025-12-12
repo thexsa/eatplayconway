@@ -57,41 +57,70 @@ async function cleanup() {
 
     const duplicatesToDelete: string[] = [];
 
-    // Group by exact time
-    const timeMap = new Map<string, any[]>();
+    // Group by Day (YYYY-MM-DD)
+    const dayMap = new Map<string, any[]>();
     events.forEach(e => {
-        const t = e.start_time;
-        if (!timeMap.has(t)) timeMap.set(t, []);
-        timeMap.get(t)!.push(e);
+        const day = e.start_time.split('T')[0];
+        if (!dayMap.has(day)) dayMap.set(day, []);
+        dayMap.get(day)!.push(e);
     });
 
-    timeMap.forEach((group, time) => {
+    dayMap.forEach((group, day) => {
         if (group.length > 1) {
-            // Check for title similarity within this time group
             // Sort by created_at desc (keep newest)
             group.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-            const keeper = group[0];
+            // Mark items for deletion
+            const keptIndices = new Set<number>();
 
-            for (let i = 1; i < group.length; i++) {
-                const candidate = group[i];
-                // Check similarity
-                const dist = getEditDistance(keeper.title.toLowerCase(), candidate.title.toLowerCase());
-                const maxLength = Math.max(keeper.title.length, candidate.title.length);
-                const similarity = 1 - (dist / maxLength);
+            for (let i = 0; i < group.length; i++) {
+                if (duplicatesToDelete.includes(group[i].id)) continue;
 
-                // Or check if one contains the other words
-                const wordsA = keeper.title.toLowerCase().split(' ');
-                const wordsB = candidate.title.toLowerCase().split(' ');
-                const intersection = wordsA.filter((w: string) => wordsB.includes(w));
-                const wordOverlap = intersection.length / Math.min(wordsA.length, wordsB.length);
+                let isDuplicate = false;
+                // Compare with already kept items in this group
+                // If it's the first item, we keep it (it's the newest)
+                // But we must check if it clashes with any *other* kept item?
+                // Actually, just compare against *subsequent* items if we iterate?
+                // Standard dedup:
+                // Keep first (newest). Compare all others to it. matches -> delete.
+                // Move to next non-deleted item. Keep it. Compare remaining...
 
-                if (similarity > 0.5 || wordOverlap > 0.6) {
-                    console.log(`\nMarking Duplicate:`);
-                    console.log(`  KEEP: "${keeper.title}" (${keeper.id})`);
-                    console.log(`  DEL:  "${candidate.title}" (${candidate.id})`);
-                    console.log(`  Similarity: ${similarity.toFixed(2)}, Overlap: ${wordOverlap.toFixed(2)}`);
-                    duplicatesToDelete.push(candidate.id);
+                // Better loop:
+                if (keptIndices.has(i)) continue; // Already processed as kept? No.
+
+                // Assume i is a Keeper for now.
+                const keeper = group[i];
+
+                for (let j = i + 1; j < group.length; j++) {
+                    if (duplicatesToDelete.includes(group[j].id)) continue;
+
+                    const candidate = group[j];
+
+                    // CHECK 1: Same Time (approx)
+                    const timeA = new Date(keeper.start_time).getTime();
+                    const timeB = new Date(candidate.start_time).getTime();
+                    const diffHours = Math.abs(timeA - timeB) / (1000 * 60 * 60);
+
+                    // CHECK 2: Title Similarity
+                    const wordsA = keeper.title.toLowerCase().split(' ');
+                    const wordsB = candidate.title.toLowerCase().split(' ');
+                    const intersection = wordsA.filter((w: string) => wordsB.includes(w));
+                    const wordOverlap = intersection.length / Math.min(wordsA.length, wordsB.length);
+
+                    const dist = getEditDistance(keeper.title.toLowerCase(), candidate.title.toLowerCase());
+                    const maxLength = Math.max(keeper.title.length, candidate.title.length);
+                    const similarity = 1 - (dist / maxLength);
+
+                    // Detect "Hearing" duplicate (AM/PM error often implies 12h diff)
+                    const isTimeDuplicate = diffHours < 13 && diffHours > 11; // 12h diff
+                    const isExactTime = diffHours < 0.1;
+
+                    if ((similarity > 0.5 || wordOverlap > 0.6) && (isExactTime || isTimeDuplicate)) {
+                        console.log(`\nMarking Duplicate (${diffHours.toFixed(1)}h diff):`);
+                        console.log(`  KEEP: "${keeper.title}" (${keeper.id}) @ ${keeper.start_time}`);
+                        console.log(`  DEL:  "${candidate.title}" (${candidate.id}) @ ${candidate.start_time}`);
+                        duplicatesToDelete.push(candidate.id);
+                    }
                 }
             }
         }

@@ -72,6 +72,16 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
                 if (!enriched.categories) enriched.categories = [];
                 if (!enriched.categories.includes('News')) enriched.categories.push('News');
 
+                // News Logic: Correct Future Dates (News shouldn't be in the future)
+                const now = new Date();
+                const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000); // 3-day buffer
+                if (eventDate > threeDaysFromNow) {
+                    console.log(`[Ingest] Correcting Future News Date: ${eventDate.toISOString()} -> Previous Year`);
+                    eventDate.setFullYear(eventDate.getFullYear() - 1);
+                    // Update the event object start_time so it persists
+                    event.start_time = eventDate.toISOString();
+                }
+
                 // News Retention: 30 days
                 if (eventDate < NEWS_CUTOFF_DATE) {
                     console.log(`[Ingest] Skipping Old News (${eventDate.toISOString()}): ${event.title}`);
