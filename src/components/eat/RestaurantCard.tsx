@@ -1,9 +1,9 @@
+'use client';
 
 import Link from 'next/link';
 import { ExternalLink, MapPin } from 'lucide-react';
-import { cn } from '../../utils/cn'; // Relative path to be safe
+import { cn } from '../../utils/cn';
 import { useState } from 'react';
-
 interface Deal {
     id: string;
     title: string;
@@ -45,33 +45,6 @@ function getRestaurantImage(slug: string): string {
 
 export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
     const initialImageUrl = getRestaurantImage(restaurant.slug);
-    // React state for image error handling
-    // Note: We need 'use client' for state, or we handle it via a simple fallback src approach
-    // But this is a server component unless marked 'use client'.
-    // Wait, Card is imported in 'page.tsx' which is server.
-    // If I add state, I must make it 'use client'.
-    // Alternatively, I can use a simple img tag with onError, BUT onError needs 'use client'.
-    // Let's mark this component as 'use client'.
-
-    // Changing standard img to safe fallback is best done with state.
-
-    // Let's revert to a simpler method first: use a very stable BBB URL.
-    // And if I want error handling, I need to make it client.
-
-    // For now, I'll update the URL to a very stable one.
-    // And I will add 'use client' to enable onError logic properly.
-
-    return <ClientRestaurantCard restaurant={restaurant} deals={deals} initialImageUrl={initialImageUrl} />;
-}
-
-// Inner Client Component for Image Handling
-'use client';
-
-function ClientRestaurantCard({ restaurant, deals, initialImageUrl }: {
-    restaurant: Restaurant,
-    deals: Deal[],
-    initialImageUrl: string
-}) {
     const [imgSrc, setImgSrc] = useState(initialImageUrl);
     const [hasError, setHasError] = useState(false);
 
