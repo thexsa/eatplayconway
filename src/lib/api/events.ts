@@ -48,7 +48,7 @@ export async function getLatestNews(limit: number = 20) {
         `)
         .eq('status', 'published')
         .contains('categories', ['News']) // Only News
-        .order('created_at', { ascending: false }) // News by ingestion time (freshness) or start_time? usually start_time for events, but news is " recent". Let's stick to start_time as "published date" proxy for now, or created_at. Let's use start_time as it maps to "article date" often.
+        .order('start_time', { ascending: false }) // Sort by article date (freshness)
         .limit(limit)
 
     if (error) {
