@@ -28,7 +28,7 @@ async function checkChamber() {
     // 2. Get Events
     const { data: events } = await supabase
         .from('events')
-        .select('title, start_time, status, created_at')
+        .select('title, start_time, status, created_at, categories')
         .eq('source_id', source.id)
         .order('start_time', { ascending: false });
 
