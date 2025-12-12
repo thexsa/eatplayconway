@@ -3,7 +3,7 @@ import { Calendar, MapPin, Info } from 'lucide-react'
 import { format } from 'date-fns'
 import { EventWithVenue } from '@/lib/api/events'
 
-export function EventCard({ event }: { event: { title: string, start_time: string, slug: string, businesses?: { name: string } | null, image_url?: string | null, price_min?: number | null, price_max?: number | null, categories?: string[] | null, description_raw?: string } }) {
+export function EventCard({ event }: { event: { title: string, start_time: string, slug: string, businesses?: { name: string } | null, image_url?: string | null, price_min?: number | null, price_max?: number | null, categories?: string[] | null, description_raw?: string | null } }) {
     const startDate = new Date(event.start_time)
     // Parse Venue from description if business is generic
     const venueMatch = (event as any).description_raw?.match(/Venue: (.*?)(\n|$)/);
