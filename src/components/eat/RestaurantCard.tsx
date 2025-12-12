@@ -1,7 +1,8 @@
 
 import Link from 'next/link';
 import { ExternalLink, MapPin } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { cn } from '../../utils/cn'; // Relative path to be safe
+import { useState } from 'react';
 
 interface Deal {
     id: string;
@@ -33,7 +34,7 @@ function getRestaurantImage(slug: string): string {
     // Static mapping for the "Top 5" to ensure they look good immediately
     // Using Unsplash source with specific keywords/IDs
     if (slug.includes('rogue')) return 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80'; // Cocktail/Bar
-    if (slug.includes('breakfast')) return 'https://images.unsplash.com/photo-1533089862017-5614a9570563?auto=format&fit=crop&w=800&q=80'; // Breakfast
+    if (slug.includes('breakfast')) return 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=800&q=80'; // Breakfast (New Pancake/Egg Image)
     if (slug.includes('steak')) return 'https://images.unsplash.com/photo-1546964124-0cce460f38ef?auto=format&fit=crop&w=800&q=80'; // Steak
     if (slug.includes('italian') || slug.includes('portofino')) return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80'; // Italian
     if (slug.includes('grill') || slug.includes('marketplace')) return 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80'; // Grill/BBQ
@@ -43,7 +44,43 @@ function getRestaurantImage(slug: string): string {
 }
 
 export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
-    const imageUrl = getRestaurantImage(restaurant.slug);
+    const initialImageUrl = getRestaurantImage(restaurant.slug);
+    // React state for image error handling
+    // Note: We need 'use client' for state, or we handle it via a simple fallback src approach
+    // But this is a server component unless marked 'use client'.
+    // Wait, Card is imported in 'page.tsx' which is server.
+    // If I add state, I must make it 'use client'.
+    // Alternatively, I can use a simple img tag with onError, BUT onError needs 'use client'.
+    // Let's mark this component as 'use client'.
+
+    // Changing standard img to safe fallback is best done with state.
+
+    // Let's revert to a simpler method first: use a very stable BBB URL.
+    // And if I want error handling, I need to make it client.
+
+    // For now, I'll update the URL to a very stable one.
+    // And I will add 'use client' to enable onError logic properly.
+
+    return <ClientRestaurantCard restaurant={restaurant} deals={deals} initialImageUrl={initialImageUrl} />;
+}
+
+// Inner Client Component for Image Handling
+'use client';
+
+function ClientRestaurantCard({ restaurant, deals, initialImageUrl }: {
+    restaurant: Restaurant,
+    deals: Deal[],
+    initialImageUrl: string
+}) {
+    const [imgSrc, setImgSrc] = useState(initialImageUrl);
+    const [hasError, setHasError] = useState(false);
+
+    const handleImageError = () => {
+        if (!hasError) {
+            setHasError(true);
+            setImgSrc('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'); // Fallback Generic
+        }
+    };
 
     return (
         <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-border-hover min-h-[400px]">
@@ -51,8 +88,9 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
             {/* Image Section */}
             <div className="relative h-48 w-full overflow-hidden bg-secondary/30">
                 <img
-                    src={imageUrl}
+                    src={imgSrc}
                     alt={restaurant.name}
+                    onError={handleImageError}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
