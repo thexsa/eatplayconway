@@ -6,9 +6,9 @@ import { ExternalLink, MapPin, ChevronLeft, Menu as MenuIcon } from 'lucide-reac
 import { cn } from '@/utils/cn';
 
 interface RestaurantDetailPageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    }
+    }>
 }
 
 // Reusing image logic for consistency until we have DB images
@@ -21,9 +21,10 @@ function getRestaurantImage(slug: string): string {
     return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80';
 }
 
-export default async function RestaurantDetailPage({ params }: RestaurantDetailPageProps) {
-    const supabase = await createClient();
+export default async function RestaurantDetailPage(props: RestaurantDetailPageProps) {
+    const params = await props.params;
     const { slug } = params;
+    const supabase = await createClient();
 
     const { data: restaurant, error } = await supabase
         .from('businesses')
