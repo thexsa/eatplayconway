@@ -55,7 +55,8 @@ async function debugChamber() {
             const text = $(el).text().trim();
             // Simple regex for Month Day
             if (text.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}/i) && text.length < 20) {
-                console.log(`Found Date-like text: "${text}" in <${el.tagName}>`);
+                // @ts-ignore - Cheerio types are strict about AnyNode vs Element
+                console.log(`Found Date-like text: "${text}" in <${(el as any).tagName}>`);
             }
         });
 
