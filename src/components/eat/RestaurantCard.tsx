@@ -20,6 +20,7 @@ interface Restaurant {
     slug: string;
     address: string | null;
     website_url: string | null;
+    menu_url?: string | null;
     description: string | null;
     social_links: any;
     // deals joined?
@@ -114,15 +115,22 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
                     )}
                 </div>
 
-                <div className="mt-4 flex gap-3">
+                <div className="mt-4 flex gap-3 flex-wrap">
+                    <Link
+                        href={`/eat/${restaurant.slug}`}
+                        className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
+                    >
+                        Peep the Menu <ExternalLink className="h-3 w-3" />
+                    </Link>
+
                     {restaurant.website_url && (
                         <a
                             href={restaurant.website_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
+                            className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-brand-orange transition-colors"
                         >
-                            Visit Website <ExternalLink className="h-3 w-3" />
+                            Website <ExternalLink className="h-3 w-3" />
                         </a>
                     )}
                 </div>
