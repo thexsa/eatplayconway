@@ -23,14 +23,15 @@ export async function extractEventsFromText(
 
     Please extract a list of events. For each event, provide:
     - title: The name of the event.
-    - start_time: The start date and time in ISO format (YYYY-MM-DDTHH:mm:ss.sssZ). Assume the event is in the near future (2025) if the year is missing. Use the Central Time Zone (America/Chicago) context if needed.
-    - description: A brief summary of the event details, including price if mentioned.
-    - url: A specific URL for the event if available in the text, otherwise use the source URL.
+    - start_time: The start date and time in ISO format (YYYY-MM-DDTHH:mm:ss.sssZ). Assume the event is in the near future (2025/2026) if the year is missing. Use the Central Time Zone (America/Chicago) context if needed.
+    - location: The venue name or address where the event takes place (e.g. "Simon Park", "UCA Reynolds Performance Hall").
+    - description: A brief summary of the event details, including price if mentioned and the original link to the specific event details if found.
+    - url: A specific URL for the event details if available in the text. If not, use the source URL.
     - image_url: A relevant image URL. Preference order:
         1. An image explicitly linked next to the event in the text.
         2. One of the 'CANDIDATE IMAGES' if it looks like a main event flyer or relevant photo.
         3. Null if no good match.
-    - raw_data: Store any other relevant raw details here as a JSON object (e.g. location, price string).
+    - raw_data: Store any other relevant raw details here as a JSON object (e.g. price string, ticket_url).
     
     IMPORTANT: Do NOT extract the following types of content:
     - Obituaries, death notices, or funeral announcements.
@@ -50,6 +51,7 @@ export async function extractEventsFromText(
             {
                 "title": "String",
                 "start_time": "ISO Date String",
+                "location": "String",
                 "description": "String",
                 "url": "String",
                 "image_url": "String | null",

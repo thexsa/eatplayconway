@@ -19,55 +19,97 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
     // Safety Filter for Non-Conway Locations (Hard block for obvious external cities)
     const LOCATION_BLOCKLIST_REGEX = /little rock|north little rock|maumelle|benton|bryant|sherwood|cabot|vilonia|mayflower|stone mountain|hot springs|saline|magnolia|seacoast|conway daily sun/i;
 
+    // RETENTION POLICY
+    const NEWS_CUTOFF_DATE = new Date();
+    NEWS_CUTOFF_DATE.setDate(NEWS_CUTOFF_DATE.getDate() - 30); // Last 30 days for News
+
+    const EVENT_CUTOFF_DATE = new Date();
+    EVENT_CUTOFF_DATE.setMonth(EVENT_CUTOFF_DATE.getMonth() - 6); // Last 6 months for events
+
+    let rejectedCount = 0;
+
     for (const event of events) {
         if (BLOCKLIST_REGEX.test(event.title) || BLOCKLIST_REGEX.test(event.description || '')) {
             console.warn(`[Ingest] Blocking blocked content: ${event.title}`);
+            rejectedCount++;
             continue;
         }
 
         if (LOCATION_BLOCKLIST_REGEX.test(event.title) || LOCATION_BLOCKLIST_REGEX.test(event.description || '')) {
             console.warn(`[Ingest] Blocking Non-Conway Location: ${event.title}`);
+            rejectedCount++;
             continue;
         }
 
         try {
-            // Let's try to enrich, if fail, fallback to raw.
+            // Rate limiting
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // AI Enrichment
             let enriched: any;
-
             try {
-                // Rate Limiting: Sleep 2s to be nice to Gemini Free Tier (approx 15-30 RPM)
-                await new Promise(resolve => setTimeout(resolve, 2000));
-
                 enriched = await enrichEvent(event);
             } catch (aiError) {
                 console.warn(`[Ingest] AI Enrichment failed for ${event.title}, using raw data.`, aiError);
-                // Fallback to raw data with minimal defaults
                 enriched = {
                     title: event.title,
                     description_summary: event.description,
-                    categories: ['Event'], // AI would have given better categories
+                    categories: ['Event'],
                     is_family_friendly: true,
-                    confidence_score: 0.5, // Lower confidence
+                    confidence_score: 0.5,
                     price_min: null,
                     price_max: null,
                     image_url: null,
                     is_news: false,
-                    is_conway: true // Assume true if unsure to be safe
+                    is_conway: true // Assume true if unsure
                 };
             }
 
-            // FILTERING LOGIC
+            // --- CATEGORY & DATE FILTERING ---
+            const eventDate = new Date(event.start_time);
+
             if (enriched.is_news) {
-                // Instead of skipping, we categorize it as News
-                console.log(`[Ingest] Tagging News Item: ${event.title}`);
                 if (!enriched.categories) enriched.categories = [];
                 if (!enriched.categories.includes('News')) enriched.categories.push('News');
+
+                // News Retention: 30 days
+                if (eventDate < NEWS_CUTOFF_DATE) {
+                    console.log(`[Ingest] Skipping Old News (${eventDate.toISOString()}): ${event.title}`);
+                    continue;
+                }
+            } else {
+                // Event Retention: 6 months
+                // Keep future events + past 6 months
+                if (eventDate < EVENT_CUTOFF_DATE) {
+                    console.log(`[Ingest] Skipping Old Event (${eventDate.toISOString()}): ${event.title}`);
+                    continue;
+                }
             }
 
-            if (enriched.is_conway === false) { // Strict check for false
+            if (enriched.is_conway === false) {
                 console.log(`[Ingest] Skipping Non-Conway Event: ${event.title}`);
                 continue;
             }
+
+            // === VENUE LOGIC (No DB Creation - RLS Limitation) ===
+            // We append Venue to description_raw so we can display it without a Business record
+            let venueAppendix = '';
+            if (event.location && event.location.length > 2 && event.location !== 'Conway, AR') {
+                venueAppendix = `\n\nVenue: ${event.location}`;
+            }
+
+            // IMAGE BLOCKLIST (Second Layer)
+            const BANNED_IMAGES = [
+                'https://conwaychamber.org/wp-content/uploads/2023/11/DSCF5203-1024x683.jpg',
+                'https://conwayarkansas.org/wp-content/uploads/2023/04/Conway-Community-July-Facebook-228-1024x762.jpeg'
+            ];
+
+            let currentImage = enriched.image_url || event.image_url;
+            if (currentImage && BANNED_IMAGES.includes(currentImage)) {
+                console.log(`[Ingest] Dropping banned image: ${currentImage}`);
+                currentImage = null; // Will trigger defaults
+            }
+
 
 
             // Smart Default Images based on context
@@ -112,7 +154,7 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
             const suffix = Math.abs(hash).toString(36).slice(-6);
 
             // final fallback logic
-            let finalImage = enriched.image_url || event.image_url;
+            let finalImage = currentImage; // Use the filtered image from above
             if (!finalImage) {
                 const text = (event.title + ' ' + event.description).toLowerCase();
                 let pool = DEFAULT_IMAGES.generic;
@@ -130,12 +172,12 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
 
             eventsToInsert.push({
                 source_id: sourceId,
-                business_id: businessId,
+                business_id: businessId, // Use Source Business ID since we can't create venues
                 title: enriched.title || event.title,
                 slug: slugify(enriched.title || event.title) + '-' + suffix,
                 start_time: event.start_time,
                 end_time: event.end_time,
-                description_raw: event.description + (event.url ? `\n\nSource: ${event.url}` : ''),
+                description_raw: event.description + (event.url ? `\n\nSource: ${event.url}` : '') + venueAppendix,
                 description_summary: enriched.description_summary || event.description,
                 categories: enriched.categories,
                 is_family_friendly: enriched.is_family_friendly,

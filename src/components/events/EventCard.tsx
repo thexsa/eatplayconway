@@ -3,9 +3,11 @@ import { Calendar, MapPin, Info } from 'lucide-react'
 import { format } from 'date-fns'
 import { EventWithVenue } from '@/lib/api/events'
 
-export function EventCard({ event }: { event: { title: string, start_time: string, slug: string, businesses?: { name: string } | null, image_url?: string | null, price_min?: number | null, price_max?: number | null, categories?: string[] | null } }) {
+export function EventCard({ event }: { event: { title: string, start_time: string, slug: string, businesses?: { name: string } | null, image_url?: string | null, price_min?: number | null, price_max?: number | null, categories?: string[] | null, description_raw?: string } }) {
     const startDate = new Date(event.start_time)
-    const venueName = event.businesses?.name || 'Unknown Venue'
+    // Parse Venue from description if business is generic
+    const venueMatch = (event as any).description_raw?.match(/Venue: (.*?)(\n|$)/);
+    const venueName = event.businesses?.name || (venueMatch ? venueMatch[1] : 'Conway, AR')
     const minPrice = event.price_min
     const maxPrice = event.price_max
 
