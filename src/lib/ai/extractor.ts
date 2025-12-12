@@ -76,3 +76,70 @@ export async function extractEventsFromText(
         return [];
     }
 }
+
+// Interface for Deals extraction result
+interface DealExtractionResult {
+    deals: NormalizedDeal[];
+}
+import { NormalizedDeal } from '../scraper/types';
+
+export async function extractDealsFromText(
+    text: string,
+    sourceUrl: string
+): Promise<NormalizedDeal[]> {
+    const prompt = `
+    You are an expert data extractor specializing in restaurant specials and deals.
+    Your goal is to extract "Daily Specials", "Happy Hours", "Lunch Specials", or recurring deals from the provided text.
+    The source URL is: ${sourceUrl}
+
+    Please extract a list of deals/specials. For each deal, provide:
+    - title: The name of the deal (e.g. "Taco Tuesday", "Happy Hour", "$10 Burger").
+    - description: Details of what is included.
+    - deal_type: One of ['happy_hour', 'discount', 'bogo', 'special']. Use 'special' for general daily specials.
+    - active_days: Array of days this deal is active (e.g. ["Tuesday"], ["Monday", "Friday"], ["Every Day"]). If purely "Weekend", list ["Saturday", "Sunday"].
+    - valid_from: Start time (HH:mm) if specified (e.g. "16:00").
+    - valid_until: End time (HH:mm) if specified (e.g. "19:00").
+    - price: Price string if mentioned (e.g. "$5.00").
+
+    IMPORTANT:
+    - Ignore one-time events (concerts, trivia nights) unless they have a specific food/drink special attached.
+    - Ignore general menu items unless they are explicitly marked as a "Special" or "Deal".
+
+    If the text contains no deals, return an empty list.
+
+    Input Text:
+    """
+    ${text.slice(0, 20000)}
+    """
+
+    Output Format (JSON):
+    {
+        "deals": [
+            {
+                "title": "String",
+                "description": "String",
+                "deal_type": "happy_hour | discount | bogo | special",
+                "active_days": ["String"],
+                "valid_from": "HH:mm | null",
+                "valid_until": "HH:mm | null",
+                "price": "String | null"
+            }
+        ]
+    }
+    `;
+
+    try {
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        let text = response.text();
+
+        // Clean up markdown code blocks if present
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+
+        const data = JSON.parse(text) as DealExtractionResult;
+        return data.deals || [];
+    } catch (error) {
+        console.error('AI Deal Extraction Failed:', error);
+        return [];
+    }
+}
