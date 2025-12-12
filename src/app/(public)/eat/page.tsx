@@ -1,14 +1,10 @@
-import { createClient } from '@supabase/supabase-js'; // Use direct client for Service Role
+import { createClient } from '@/utils/supabase/server';
 import { RestaurantCard } from '@/components/eat/RestaurantCard';
 
 export const revalidate = 3600; // 1 hour
 
 export default async function EatPage() {
-    // Hotfix: Use Service Role Key to bypass RLS issues for now
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = await createClient();
 
     // Fetch restaurants with active deals
     // Using explicit join
