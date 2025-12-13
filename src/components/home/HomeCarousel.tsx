@@ -5,10 +5,14 @@ import { useState, useEffect } from 'react';
 import { cn } from '../../utils/cn';
 
 const IMAGES = [
+    '/images/hero/hero_bridge_walking.jpg',
+    '/images/hero/hero_shop_agave.jpg',
+    '/images/hero/hero_downtown_street.jpg',
+    '/images/hero/hero_bridge_side.jpg',
+    '/images/hero/hero_vendor.jpg',
     '/images/hero/downtown.png',
     '/images/hero/park.png',
-    '/images/hero/university.png',
-    '/images/hero/bridge.png'
+    '/images/hero/university.png'
 ];
 
 export function HomeCarousel() {
