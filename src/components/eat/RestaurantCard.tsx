@@ -190,10 +190,11 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
                         </a>
                     ) : (
                         <Link
-                            href={`/eat/${restaurant.slug}`}
-                            className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
+                            href="/submit"
+                            className="inline-flex items-center gap-1 text-sm font-bold text-gray-400 hover:text-brand-orange transition-colors"
                         >
-                            Peep the Menu <ExternalLink className="h-3 w-3" />
+                            <span className="border-b border-dashed border-gray-400 hover:border-brand-orange">Add your menu</span>
+                            <span className="bg-gray-100 text-[10px] px-1 rounded text-gray-500">Owner?</span>
                         </Link>
                     )}
 

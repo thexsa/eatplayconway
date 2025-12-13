@@ -268,7 +268,7 @@ export default async function RestaurantDetailPage(props: RestaurantDetailPagePr
                                     </a>
                                 )}
 
-                                {restaurant.menu_url && (
+                                {restaurant.menu_url ? (
                                     <a
                                         href={restaurant.menu_url}
                                         target="_blank"
@@ -277,6 +277,14 @@ export default async function RestaurantDetailPage(props: RestaurantDetailPagePr
                                     >
                                         <span>Full Menu</span>
                                         <MenuIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                                    </a>
+                                ) : (
+                                    <a
+                                        href="/submit"
+                                        className="flex items-center justify-between w-full p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-dashed border-gray-200 text-muted-foreground hover:text-brand-orange transition-colors group"
+                                    >
+                                        <span>Add your menu</span>
+                                        <span className="text-xs bg-white border px-2 py-0.5 rounded-full group-hover:border-brand-orange/30">Owner?</span>
                                     </a>
                                 )}
                             </div>
