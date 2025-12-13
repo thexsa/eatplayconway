@@ -4,10 +4,10 @@
 import { useState, useEffect } from 'react';
 import { cn } from '../../utils/cn';
 
-const IMAGES = [
-    '/images/hero/downtown.png',
+'/images/hero/downtown.png',
     '/images/hero/park.png',
-    '/images/hero/university.png'
+    '/images/hero/university.png',
+    '/images/hero/bridge.png'
 ];
 
 export function HomeCarousel() {
