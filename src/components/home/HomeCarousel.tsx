@@ -10,6 +10,8 @@ const IMAGES = [
     '/images/hero/hero_downtown_street.jpg',
     '/images/hero/hero_bridge_side.jpg',
     '/images/hero/hero_vendor.jpg',
+    '/images/hero/hero_art_walk.jpg',
+    '/images/hero/hero_statue_street.jpg',
     '/images/hero/downtown.png',
     '/images/hero/park.png',
     '/images/hero/university.png'
