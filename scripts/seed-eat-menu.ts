@@ -12,7 +12,7 @@ const supabase = createClient(
 const MENU_DATA = [
     {
         slug: 'the-rogue-roundabout',
-        menu_url: 'https://www.therogueroundabout.com/food-drink'
+        menu_url: 'https://www.therogueroundabout.com/menus-updated'
     },
     {
         slug: 'big-bad-breakfast-conway',

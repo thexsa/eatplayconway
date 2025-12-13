@@ -49,6 +49,19 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
     const [imgSrc, setImgSrc] = useState(initialImageUrl);
     const [hasError, setHasError] = useState(false);
 
+    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+
+    // Filter deals for today
+    const todaysDeals = deals?.filter(d =>
+        !d.days_active || d.days_active.includes(today)
+    ) || [];
+
+    const foodSpecials = todaysDeals.filter(d => d.deal_type === 'food' || d.deal_type === 'discount' || !d.deal_type);
+    const drinkSpecials = todaysDeals.filter(d => d.deal_type === 'drink');
+    const happyHours = todaysDeals.filter(d => d.deal_type === 'happy_hour');
+
+    const hasSpecials = foodSpecials.length > 0 || drinkSpecials.length > 0 || happyHours.length > 0;
+
     const handleImageError = () => {
         if (!hasError) {
             setHasError(true);
@@ -57,7 +70,7 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
     };
 
     return (
-        <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-border-hover min-h-[400px]">
+        <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-border-hover min-h-[450px]">
 
             {/* Image Section */}
             <div className="relative h-48 w-full overflow-hidden bg-secondary/30">
@@ -90,32 +103,69 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
                     )}
                 </div>
 
-                {/* Deals Section */}
-                <div className="mt-auto pt-4 border-t border-border/50">
-                    <p className="text-xs font-semibold text-brand-orange uppercase tracking-wider mb-2">Current Specials</p>
+                {/* Specials Section */}
+                <div className="mt-auto px-5 -mx-5 pb-2 pt-4 border-t border-border/50 bg-secondary/5 space-y-3">
 
-                    {deals && deals.length > 0 ? (
-                        <ul className="space-y-2">
-                            {deals.map(deal => (
-                                <li key={deal.id} className="text-sm">
-                                    <span className="font-medium text-text-dark">{deal.title}</span>
-                                    {deal.description && <span className="text-muted-foreground text-xs block mt-0.5"> {deal.description}</span>}
-                                    {deal.start_time && (
-                                        <span className="text-[10px] text-muted-foreground ml-1 inline-block bg-secondary/50 px-1.5 py-0.5 rounded">
-                                            {deal.start_time} - {deal.end_time || 'Close'}
-                                        </span>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className="text-xs text-muted-foreground italic">
-                            No deals listed today. Check website for updates.
+                    {/* 1. Food Specials */}
+                    {foodSpecials.length > 0 && (
+                        <div>
+                            <p className="text-[10px] font-bold text-brand-orange uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <span className="bg-brand-orange/10 px-1 py-0.5 rounded">🍽️ Food</span>
+                            </p>
+                            <ul className="space-y-1">
+                                {foodSpecials.map(deal => (
+                                    <li key={deal.id} className="text-xs text-text-dark leading-tight">
+                                        <span className="font-medium">{deal.title}</span>
+                                        {deal.start_time && <span className="text-muted-foreground ml-1 text-[10px]">({deal.start_time} - {deal.end_time || 'Close'})</span>}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* 2. Drink Specials */}
+                    {drinkSpecials.length > 0 && (
+                        <div>
+                            <p className="text-[10px] font-bold text-brand-orange uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <span className="bg-brand-orange/10 px-1 py-0.5 rounded">🍹 Drinks</span>
+                            </p>
+                            <ul className="space-y-1">
+                                {drinkSpecials.map(deal => (
+                                    <li key={deal.id} className="text-xs text-text-dark leading-tight">
+                                        <span className="font-medium">{deal.title}</span>
+                                        {deal.start_time && <span className="text-muted-foreground ml-1 text-[10px]">({deal.start_time} - {deal.end_time || 'Close'})</span>}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* 3. Happy Hour */}
+                    {happyHours.length > 0 && (
+                        <div>
+                            <p className="text-[10px] font-bold text-brand-orange uppercase tracking-wider mb-1 flex items-center gap-1">
+                                <span className="bg-brand-orange/10 px-1 py-0.5 rounded">⏰ Happy Hour</span>
+                            </p>
+                            <ul className="space-y-1">
+                                {happyHours.map(deal => (
+                                    <li key={deal.id} className="text-xs text-text-dark leading-tight">
+                                        <span className="font-medium">{deal.title}</span>
+                                        {deal.start_time && <span className="text-muted-foreground ml-1 text-[10px]">({deal.start_time} - {deal.end_time})</span>}
+                                        <div className="text-[10px] text-muted-foreground truncate">{deal.description}</div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {!hasSpecials && (
+                        <p className="text-xs text-muted-foreground italic py-2 px-5">
+                            No specials listed for {today}.
                         </p>
                     )}
                 </div>
 
-                <div className="mt-4 flex gap-3 flex-wrap">
+                <div className="mt-4 flex gap-3 flex-wrap pt-2">
                     <Link
                         href={`/eat/${restaurant.slug}`}
                         className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
