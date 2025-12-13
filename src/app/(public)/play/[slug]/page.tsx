@@ -12,11 +12,17 @@ interface PlayDetailPageProps {
 }
 
 function getPlayImage(slug: string): string {
-    if (slug.includes('bowl')) return 'https://images.unsplash.com/photo-1542840410-3092f48dfc11?auto=format&fit=crop&w=1200&q=80';
-    if (slug.includes('paint') || slug.includes('art')) return 'https://images.unsplash.com/photo-1460661618165-55e3b2028dec?auto=format&fit=crop&w=1200&q=80';
-    if (slug.includes('urban') || slug.includes('jump')) return 'https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&w=1200&q=80';
-    if (slug.includes('golf')) return 'https://images.unsplash.com/photo-1592919505780-30395071b483?auto=format&fit=crop&w=1200&q=80';
-    return 'https://images.unsplash.com/photo-1605806616949-1e87b487bc2a?auto=format&fit=crop&w=1200&q=80'; // Generic fun
+    // Local images downloaded to /public/images/play/
+    if (slug === 'conway-family-bowl') return '/images/play/conway-family-bowl.jpg';
+    if (slug === 'action-jacks-conway') return '/images/play/action-jacks-conway.jpg';
+    if (slug === 'urban-air-conway') return '/images/play/urban-air-conway.jpg';
+    if (slug === 'jacks-ultra-sports') return '/images/play/jacks-ultra-sports.jpg';
+    if (slug === 'home-depot-conway-classes') return '/images/play/home-depot-conway-classes.jpg';
+    if (slug === 'painting-with-a-twist-conway') return '/images/play/painting-with-a-twist-conway.jpg';
+
+    // Generic Fallbacks
+    if (slug.includes('bowl')) return '/images/play/conway-family-bowl.jpg';
+    return '/images/play/conway-family-bowl.jpg';
 }
 
 const DAYS_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

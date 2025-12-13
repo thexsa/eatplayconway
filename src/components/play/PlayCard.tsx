@@ -34,28 +34,26 @@ interface PlayCardProps {
 }
 
 function getPlayImage(slug: string): string {
-    // Specific images for seeded venues
-    if (slug.includes('conway-family-bowl')) return 'https://content.getg5.com/assets/photos/large/conway-family-bowl-conway-ar-bowling-lanes-1.jpg'; // Real image found online or proxy
-    // Fallback using Unsplash if specific ones fail or for new additions, but user requested org images.
-    // Since I can't browse the live web for exact URLs safely without risk of hotlinking blocks, I'll use high-probability stable images or generic reliable ones if specific site scraping is blocked.
-    // Actually, I'll use the specific Unsplash fallback I created in the detail page, but tailored.
-
-    // Better approximation for "Org Images" without live scraping:
-    if (slug === 'conway-family-bowl') return 'https://d4qwpt1hyf508.cloudfront.net/wp-content/uploads/2018/04/Conway-Family-Bowl-1024x683.jpg';
-    if (slug === 'action-jacks-conway') return 'https://img1.wsimg.com/isteam/ip/9d6ee174-878e-47f2-bd5f-d2320eb42436/AJ_Logo_Black_Background.png/:/rs=w:1280';
-    if (slug === 'urban-air-conway') return 'https://myareanetwork-photos.s3.amazonaws.com/bizlist_photos/f/274438_1523964319.jpg';
-    if (slug === 'jacks-ultra-sports') return 'https://jacksultrasports.com/wp-content/uploads/2021/10/Jacks-Ultra-Sports-Paintball-Laser-Tag-Escape-Rooms-Archery-Warz-Conway-Arkansas-logo-1.png';
-    if (slug === 'home-depot-conway-classes') return 'https://corporate.homedepot.com/sites/default/files/styles/social_share/public/2022-07/Hero_Image_Kids_Workshops.jpg?itok=zQ7Xg-wM';
-    if (slug === 'painting-with-a-twist-conway') return 'https://www.paintingwithatwist.com/images/franchise-opportunities/studio-interior-3.jpg';
+    // Local images downloaded to /public/images/play/
+    // This ensures no 403 errors from external sites
+    if (slug === 'conway-family-bowl') return '/images/play/conway-family-bowl.jpg';
+    if (slug === 'action-jacks-conway') return '/images/play/action-jacks-conway.jpg';
+    if (slug === 'urban-air-conway') return '/images/play/urban-air-conway.jpg';
+    if (slug === 'jacks-ultra-sports') return '/images/play/jacks-ultra-sports.jpg';
+    if (slug === 'home-depot-conway-classes') return '/images/play/home-depot-conway-classes.jpg';
+    if (slug === 'painting-with-a-twist-conway') return '/images/play/painting-with-a-twist-conway.jpg';
 
     // Generic Fallbacks
-    if (slug.includes('bowl')) return 'https://images.unsplash.com/photo-1542840410-3092f48dfc11?auto=format&fit=crop&w=800&q=80';
-    return 'https://images.unsplash.com/photo-1605806616949-1e87b487bc2a?auto=format&fit=crop&w=800&q=80';
+    if (slug.includes('bowl')) return '/images/play/conway-family-bowl.jpg';
+    return '/images/play/conway-family-bowl.jpg'; // Ultimate Fallback
 }
 
 export function PlayCard({ venue, deals }: PlayCardProps) {
     const router = useRouter();
     const initialImageUrl = getPlayImage(venue.slug);
+    // DEBUG: Log to verify what image is being selected
+    console.log(`[PlayCard] Slug: ${venue.slug}, Image: ${initialImageUrl}`);
+
     const [imgSrc, setImgSrc] = useState(initialImageUrl);
     const [hasError, setHasError] = useState(false);
 
@@ -69,7 +67,7 @@ export function PlayCard({ venue, deals }: PlayCardProps) {
     const handleImageError = () => {
         if (!hasError) {
             setHasError(true);
-            setImgSrc('https://images.unsplash.com/photo-1605806616949-1e87b487bc2a?auto=format&fit=crop&w=800&q=80'); // Generic Fun
+            setImgSrc('/images/play/conway-family-bowl.jpg'); // Safe local fallback
         }
     };
 
