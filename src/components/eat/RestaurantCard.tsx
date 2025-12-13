@@ -179,12 +179,23 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
                 </div>
 
                 <div className="mt-4 flex gap-3 flex-wrap pt-2">
-                    <Link
-                        href={`/eat/${restaurant.slug}`}
-                        className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
-                    >
-                        Peep the Menu <ExternalLink className="h-3 w-3" />
-                    </Link>
+                    {restaurant.menu_url ? (
+                        <a
+                            href={restaurant.menu_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
+                        >
+                            Peep the Menu <ExternalLink className="h-3 w-3" />
+                        </a>
+                    ) : (
+                        <Link
+                            href={`/eat/${restaurant.slug}`}
+                            className="inline-flex items-center gap-1 text-sm font-medium text-brand-orange hover:underline decoration-brand-orange/50"
+                        >
+                            Peep the Menu <ExternalLink className="h-3 w-3" />
+                        </Link>
+                    )}
 
                     {restaurant.website_url && (
                         <a
