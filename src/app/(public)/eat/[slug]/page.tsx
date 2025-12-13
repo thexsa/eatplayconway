@@ -54,11 +54,15 @@ function getRestaurantImage(slug: string): string {
     return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80';
 }
 
+// Helper to sort days
+const DAYS_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 export default async function RestaurantDetailPage(props: RestaurantDetailPageProps) {
     const params = await props.params;
     const { slug } = params;
     const supabase = await createClient();
 
+    // Fetch Restaurant
     const { data: restaurant, error } = await supabase
         .from('businesses')
         .select('*')
@@ -69,10 +73,21 @@ export default async function RestaurantDetailPage(props: RestaurantDetailPagePr
         return notFound();
     }
 
+    // Fetch Deals
+    const { data: deals } = await supabase
+        .from('deals')
+        .select('*')
+        .eq('business_id', restaurant.id)
+        .eq('is_active', true);
+
     const imageUrl = getRestaurantImage(slug);
 
     // Check if menu is embeddable
     const canEmbed = restaurant.menu_url ? await isEmbeddable(restaurant.menu_url) : false;
+
+    // Parse Hours
+    // Fallback: Check 'hours' column first, then 'social_links.hours' if column missing
+    const hours = (restaurant as any).hours || (restaurant.social_links as any)?.hours || null;
 
     return (
         <div className="min-h-screen bg-brand-cream pt-24 pb-20">
@@ -114,6 +129,53 @@ export default async function RestaurantDetailPage(props: RestaurantDetailPagePr
                                 <p className="text-text-dark/80 leading-relaxed">
                                     {restaurant.description}
                                 </p>
+                            </div>
+                        )}
+
+                        {/* Weekly Specials */}
+                        {deals && deals.length > 0 && (
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40">
+                                <h2 className="text-xl font-bold text-text-dark mb-4 border-b border-gray-100 pb-2 flex items-center gap-2">
+                                    <span>🌟 Weekly Specials</span>
+                                </h2>
+                                <div className="space-y-4">
+                                    {deals.sort((a, b) => {
+                                        // Simple sort by distinct days? 
+                                        // A deal might be active multiple days. 
+                                        // Logic: Display deals grouped by day? Or list them all? 
+                                        // User asked to have "FULL list... listed".
+                                        // Grouping by "Every Day" vs specific days is nice.
+                                        return 0;
+                                    }).map(deal => (
+                                        <div key={deal.id} className="flex flex-col sm:flex-row sm:items-start justify-between p-3 rounded-lg bg-secondary/5 gap-2">
+                                            <div>
+                                                <h4 className="font-semibold text-text-dark">{deal.title}</h4>
+                                                {deal.description && <p className="text-sm text-text-dark/70">{deal.description}</p>}
+                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                    {deal.days_active && deal.days_active.map((day: string) => (
+                                                        <span key={day} className="text-[10px] bg-white border border-border px-1.5 py-0.5 rounded text-muted-foreground">{day}</span>
+                                                    ))}
+                                                    {deal.deal_type && (
+                                                        <span className={cn(
+                                                            "text-[10px] px-1.5 py-0.5 rounded font-medium uppercase",
+                                                            deal.deal_type === 'food' ? "bg-orange-100 text-orange-700" :
+                                                                deal.deal_type === 'drink' ? "bg-blue-100 text-blue-700" :
+                                                                    deal.deal_type === 'happy_hour' ? "bg-purple-100 text-purple-700" :
+                                                                        "bg-gray-100 text-gray-700"
+                                                        )}>
+                                                            {deal.deal_type.replace('_', ' ')}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            {deal.start_time && (
+                                                <div className="text-xs font-mono bg-white px-2 py-1 rounded border border-border whitespace-nowrap">
+                                                    {deal.start_time} - {deal.end_time || 'Close'}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
 
@@ -170,10 +232,30 @@ export default async function RestaurantDetailPage(props: RestaurantDetailPagePr
 
                     {/* Sidebar */}
                     <div className="space-y-6">
+                        {/* Operating Hours */}
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40 sticky top-24">
-                            <h3 className="font-bold text-text-dark mb-4 text-lg">Details</h3>
+                            <h3 className="font-bold text-text-dark mb-4 text-lg">Hours of Operation</h3>
+                            {hours ? (
+                                <ul className="space-y-2 text-sm">
+                                    {DAYS_ORDER.map(day => {
+                                        const time = hours[day]; // Assuming keys match case
+                                        const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }) === day;
+                                        return (
+                                            <li key={day} className={cn("flex justify-between items-center py-1 border-b border-dashed border-gray-100 last:border-0", isToday && "font-bold text-brand-orange")}>
+                                                <span className="text-text-dark/80">{day}</span>
+                                                <span className={cn("text-right", !time ? "text-muted-foreground italic" : "text-text-dark")}>
+                                                    {time || 'Closed'}
+                                                </span>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            ) : (
+                                <p className="text-sm text-muted-foreground italic">Hours not available.</p>
+                            )}
 
-                            <div className="space-y-4">
+                            {/* Links Actions */}
+                            <div className="mt-8 space-y-4 pt-4 border-t border-gray-100">
                                 {restaurant.website_url && (
                                     <a
                                         href={restaurant.website_url}

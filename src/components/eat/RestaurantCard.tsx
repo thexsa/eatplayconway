@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ExternalLink, MapPin } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useState } from 'react';
@@ -45,6 +46,7 @@ function getRestaurantImage(slug: string): string {
 }
 
 export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
+    const router = useRouter();
     const initialImageUrl = getRestaurantImage(restaurant.slug);
     const [imgSrc, setImgSrc] = useState(initialImageUrl);
     const [hasError, setHasError] = useState(false);
@@ -69,8 +71,19 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
         }
     };
 
+    const handleCardClick = (e: React.MouseEvent) => {
+        // Prevent navigation if clicking on an interactive element (like a link)
+        if ((e.target as HTMLElement).closest('a') || (e.target as HTMLElement).closest('button')) {
+            return;
+        }
+        router.push(`/eat/${restaurant.slug}`);
+    };
+
     return (
-        <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-border-hover min-h-[450px]">
+        <div
+            onClick={handleCardClick}
+            className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md hover:border-border-hover min-h-[450px] cursor-pointer"
+        >
 
             {/* Image Section */}
             <div className="relative h-48 w-full overflow-hidden bg-secondary/30">
