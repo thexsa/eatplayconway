@@ -1,6 +1,6 @@
 
 import { createClient } from '@/utils/supabase/server';
-import { RestaurantCard } from '@/components/eat/RestaurantCard';
+import { PlayCard } from '@/components/play/PlayCard';
 
 export const revalidate = 3600; // 1 hour
 
@@ -30,7 +30,7 @@ export default async function PlayPage() {
         <div className="min-h-screen bg-brand-cream pt-24 pb-12 px-4 md:px-8">
             <div className="mb-10 text-center">
                 <h1 className="text-4xl font-extrabold tracking-tight text-text-dark md:text-5xl lg:text-6xl mb-4 text-center">
-                    Play & Do
+                    Play
                 </h1>
                 <p className="mx-auto max-w-2xl text-lg text-muted-foreground text-center">
                     Find fun activities, classes, and entertainment for the whole family.
@@ -40,9 +40,9 @@ export default async function PlayPage() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {list.length > 0 ? (
                     list.map((r: any) => (
-                        <RestaurantCard
+                        <PlayCard
                             key={r.id}
-                            restaurant={r}
+                            venue={r}
                             deals={r.deals || []}
                         />
                     ))
