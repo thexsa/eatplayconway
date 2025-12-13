@@ -16,6 +16,7 @@ export default async function EatPage() {
                 *
             )
         `)
+        .or('category.eq.restaurant,category.is.null')
         .order('name');
 
     if (error) {
