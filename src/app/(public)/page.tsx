@@ -1,61 +1,33 @@
 import Link from 'next/link'
-import { getUpcomingEvents } from '@/lib/api/events'
-import { Calendar, MapPin, ArrowRight } from 'lucide-react'
-import { EventCard } from '@/components/events/EventCard'
+import { HomeCarousel } from '@/components/home/HomeCarousel'
+import { ArrowRight } from 'lucide-react'
 
-export const dynamic = 'force-dynamic' // Disable caching to ensure fresh events/slugs
+export const dynamic = 'force-dynamic'
 
-export default async function HomePage() {
-    const events = await getUpcomingEvents(9)
-
+export default function HomePage() {
     return (
-        <div className="min-h-screen bg-brand-cream">
-            {/* Hero Section */}
-            <section className="relative overflow-hidden pt-20 pb-32">
-                {/* Geometric Shapes */}
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-brand-orange opacity-20 blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-brand-red opacity-10 blur-3xl"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-brand-yellow opacity-10 blur-3xl"></div>
+        <div className="min-h-screen bg-brand-cream flex flex-col">
+            <div className="relative flex-1 flex flex-col justify-center items-center min-h-[90vh] pb-20">
+                <HomeCarousel />
 
-                <div className="relative mx-auto max-w-7xl px-6 lg:px-8 text-center">
-                    <h1 className="font-serif text-5xl font-medium tracking-tight text-text-dark sm:text-7xl mb-6">
-                        Discover Conway’s <br />
-                        <span className="italic relative inline-block">
-                            <span className="relative z-10">Best Moments</span>
-                            <span className="absolute bottom-2 left-0 w-full h-3 bg-brand-yellow/50 -rotate-1 z-0"></span>
-                        </span>
+                <div className="relative z-10 mx-auto max-w-5xl px-6 lg:px-8 text-center">
+                    <h1 className="font-serif text-5xl font-extrabold tracking-tight text-white sm:text-7xl lg:text-8xl mb-8 drop-shadow-lg">
+                        A one-stop-shop for<br />
+                        <span className="text-brand-yellow">everything Conway.</span>
                     </h1>
-                    <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 font-sans">
-                        Your curated guide to events, local eats, and hidden gems in Conway, Arkansas. Automatically updated daily.
+                    <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-white/90 font-medium drop-shadow-md">
+                        Discover local eats, hidden gems, and the best entertainment.
                     </p>
-                    <div className="mt-10 flex items-center justify-center gap-x-6">
-                        <Link href="/events" className="rounded-full bg-brand-red px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-orange transition-colors duration-300">
-                            Explore Events
+                    <div className="mt-12 flex items-center justify-center gap-x-6">
+                        <Link href="/conway" className="rounded-full bg-brand-orange px-10 py-4 text-lg font-bold text-white shadow-xl hover:bg-brand-red transition-all duration-300 hover:scale-105 border-2 border-transparent">
+                            Start Exploring
                         </Link>
-                        <Link href="/deals" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
-                            Find Deals <span aria-hidden="true">→</span>
+                        <Link href="/eat" className="rounded-full bg-white/10 backdrop-blur-md px-10 py-4 text-lg font-bold text-white shadow-lg border-2 border-white/50 hover:bg-white/20 transition-all duration-300">
+                            Find Food
                         </Link>
                     </div>
                 </div>
-            </section>
-
-            {/* Event Grid */}
-            <section className="py-24 bg-white/50 backdrop-blur-sm">
-                <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                    <div className="flex items-center justify-between mb-12">
-                        <h2 className="font-serif text-3xl font-medium text-text-dark">Happening This Week</h2>
-                        <Link href="/events" className="text-sm font-medium text-brand-red hover:text-brand-orange flex items-center gap-1">
-                            View all <ArrowRight className="size-4" />
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-                        {events.map((event) => (
-                            <EventCard key={event.id} event={event} />
-                        ))}
-                    </div>
-                </div>
-            </section>
+            </div>
         </div>
     )
 }

@@ -15,20 +15,14 @@ export function Header() {
 
                     {/* Desktop Nav */}
                     <div className="hidden lg:flex lg:gap-x-12">
-                        <Link href="/events" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
-                            Events
-                        </Link>
-                        <Link href="/news" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
-                            News
-                        </Link>
                         <Link href="/eat" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
                             Eat
                         </Link>
                         <Link href="/play" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
                             Play
                         </Link>
-                        <Link href="/about" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
-                            About
+                        <Link href="/conway" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            Conway
                         </Link>
                     </div>
 
