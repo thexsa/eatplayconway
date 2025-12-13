@@ -32,18 +32,10 @@ interface RestaurantCardProps {
     deals: Deal[];
 }
 
-function getRestaurantImage(slug: string): string {
-    // Static mapping for the "Top 5" to ensure they look good immediately
-    // Using Unsplash source with specific keywords/IDs
-    if (slug.includes('rogue')) return 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80'; // Cocktail/Bar
-    if (slug.includes('breakfast')) return 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=800&q=80'; // Breakfast (New Pancake/Egg Image)
-    if (slug.includes('steak')) return 'https://images.unsplash.com/photo-1546964124-0cce460f38ef?auto=format&fit=crop&w=800&q=80'; // Steak
-    if (slug.includes('italian') || slug.includes('portofino')) return 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80'; // Italian
-    if (slug.includes('grill') || slug.includes('marketplace')) return 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80'; // Grill/BBQ
+import { getRestaurantImage } from '@/lib/data/restaurant-images';
 
-    // Fallback
-    return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80';
-}
+// Removed local getRestaurantImage function
+
 
 export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
     const router = useRouter();
@@ -67,7 +59,7 @@ export function RestaurantCard({ restaurant, deals }: RestaurantCardProps) {
     const handleImageError = () => {
         if (!hasError) {
             setHasError(true);
-            setImgSrc('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'); // Fallback Generic
+            setImgSrc('https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80'); // Generic Restaurant Fallback
         }
     };
 
