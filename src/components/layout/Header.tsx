@@ -24,8 +24,8 @@ export function Header() {
                         <Link href="/eat" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
                             Eat
                         </Link>
-                        <Link href="/guides" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
-                            Guides
+                        <Link href="/play" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
+                            Play
                         </Link>
                         <Link href="/about" className="text-sm font-semibold leading-6 text-text-dark hover:text-brand-orange transition-colors">
                             About
