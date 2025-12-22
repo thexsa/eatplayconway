@@ -11,16 +11,18 @@ const supabase = createClient(
 )
 
 async function debugQuery() {
-    // Test OR logic for Restaurants (restaurant OR null)
-    console.log('\n--- Testing Filter: category eq restaurant OR null ---');
-    const { data: filtered } = await supabase
-        .from('businesses')
-        .select('name, category')
-        .or('category.eq.restaurant,category.is.null')
-        .order('name');
+    // Inspect Events
+    console.log('\n--- Inspecting Events Table ---');
+    const { data: events, error } = await supabase
+        .from('events')
+        .select('*')
+        .limit(1);
 
-    console.log(`Found ${filtered?.length} records.`);
-    filtered?.forEach(b => console.log(`${b.name} (${b.category})`));
+    if (error) console.error(error);
+    else if (events && events.length > 0) {
+        console.log('Available columns:', Object.keys(events[0]));
+        console.log('Sample event:', events[0]);
+    }
 }
 
 

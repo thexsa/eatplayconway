@@ -24,22 +24,38 @@ export async function getAllSources() {
     return data
 }
 
-export async function getPendingEvents() {
+export async function getAdminEvents(filter: 'pending' | 'active' | 'past' = 'pending') {
     const supabase = await createClient()
 
-    const { data, error } = await supabase
+    let query = supabase
         .from('events')
         .select(`
             *,
-             businesses (
+            businesses (
                 name
+            ),
+            scrape_sources (
+                source_url
             )
         `)
-        .in('status', ['enriched', 'raw', 'draft']) // Ready for review
-        .order('ai_confidence', { ascending: false })
+
+    if (filter === 'pending') {
+        query = query.in('status', ['enriched', 'raw', 'draft'])
+        query = query.order('ai_confidence', { ascending: false })
+    } else if (filter === 'active') {
+        query = query.eq('status', 'published')
+        query = query.gte('start_time', new Date().toISOString())
+        query = query.order('start_time', { ascending: true })
+    } else if (filter === 'past') {
+        query = query.eq('status', 'published')
+        query = query.lt('start_time', new Date().toISOString())
+        query = query.order('start_time', { ascending: false }) // Most recent past first
+    }
+
+    const { data, error } = await query
 
     if (error) {
-        console.error('Error fetching pending events:', error)
+        console.error('Error fetching admin events:', error)
         return []
     }
 

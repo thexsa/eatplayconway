@@ -1,26 +1,59 @@
 import { Check, X, Eye } from 'lucide-react'
-import { getPendingEvents } from '@/lib/api/admin'
+import { getAdminEvents } from '@/lib/api/admin'
 import { approveEvent, rejectEvent } from './actions'
 import Link from 'next/link'
 import { EventActionButtons } from '@/components/admin/EventActionButtons'
 import { BulkApproveButton } from '@/components/admin/BulkApproveButton'
+import { cn } from '@/utils/cn'
 
-export default async function EventsQueuePage() {
-    const events = await getPendingEvents()
+export default async function EventsQueuePage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
+    const { tab: tabParam } = await searchParams
+    const tab = (tabParam as 'pending' | 'active' | 'past') || 'pending'
+    const events = await getAdminEvents(tab)
+
+    const isPending = tab === 'pending'
+    const isPublished = tab === 'active' || tab === 'past'
 
     return (
         <div className="space-y-8">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold tracking-tight text-text-dark">Events Queue</h1>
-                    <p className="text-gray-500">Review {events?.length || 0} pending events.</p>
+                    <h1 className="font-serif text-3xl font-bold tracking-tight text-text-dark">Events Management</h1>
+                    <p className="text-gray-500">Manage your events queue and lifecycle.</p>
                 </div>
-                {events && events.length > 0 && (
-                    <div className="flex gap-2">
-                        <BulkApproveButton />
-                    </div>
-                )}
             </div>
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200">
+                <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                    {[
+                        { name: 'Needs Approval', id: 'pending' },
+                        { name: 'Active', id: 'active' },
+                        { name: 'Past', id: 'past' },
+                    ].map((item) => (
+                        <Link
+                            key={item.name}
+                            href={`/admin/events?tab=${item.id}`}
+                            className={cn(
+                                item.id === tab
+                                    ? 'border-brand-orange text-brand-orange'
+                                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                                'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
+                            )}
+                            aria-current={item.id === tab ? 'page' : undefined}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </nav>
+            </div>
+
+            {/* Quick Actions (Bulk Approve) - Only for Pending */}
+            {isPending && events && events.length > 0 && (
+                <div className="flex justify-end">
+                    <BulkApproveButton />
+                </div>
+            )}
 
             <div className="rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden">
                 <table className="w-full text-left text-sm">
@@ -39,7 +72,14 @@ export default async function EventsQueuePage() {
                             <tr key={event.id} className="hover:bg-brand-cream/50 transition-colors">
                                 <td className="px-6 py-4 font-medium text-text-dark">
                                     <div className="flex flex-col">
-                                        <span>{event.title}</span>
+                                        <a
+                                            href={(event as any).scrape_sources?.source_url || '#'}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="hover:underline text-brand-orange font-semibold"
+                                        >
+                                            {event.title}
+                                        </a>
                                         <span className="text-xs text-gray-400">{event.id.slice(0, 8)}</span>
                                     </div>
                                 </td>
@@ -63,21 +103,24 @@ export default async function EventsQueuePage() {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 flex items-center gap-2">
-                                    <Link href={`/events/${event.slug}`} target="_blank" className="p-1 text-gray-400 hover:text-brand-orange transition-colors">
+                                    <Link href={`/events/${event.slug}`} target="_blank" className="p-1 text-gray-400 hover:text-brand-orange transition-colors" title="View Public Page">
                                         <Eye className="size-4" />
                                     </Link>
-                                    <Link href={`/admin/events/${event.id}/edit`} className="p-1 text-gray-400 hover:text-text-dark transition-colors">
+                                    <Link href={`/admin/events/${event.id}/edit`} className="p-1 text-gray-400 hover:text-text-dark transition-colors" title="Edit">
                                         <div className="sr-only">Edit</div>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pencil size-4"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" /></svg>
                                     </Link>
-                                    <EventActionButtons eventId={event.id} />
+                                    <EventActionButtons
+                                        eventId={event.id}
+                                        isPublished={isPublished}
+                                    />
                                 </td>
                             </tr>
                         ))}
                         {(!events || events.length === 0) && (
                             <tr>
                                 <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                                    No pending events found. Good job!
+                                    No events found in this tab.
                                 </td>
                             </tr>
                         )}

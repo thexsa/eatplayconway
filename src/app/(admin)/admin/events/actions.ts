@@ -37,6 +37,23 @@ export async function rejectEvent(eventId: string) {
     revalidatePath('/admin/events')
 }
 
+export async function unpublishEvent(eventId: string) {
+    const supabase = await createClient()
+
+    const { error } = await supabase
+        .from('events')
+        .update({ status: 'draft' }) // Set back to draft
+        .eq('id', eventId)
+
+    if (error) {
+        throw new Error('Failed to unpublish event')
+    }
+
+    revalidatePath('/admin/events')
+    revalidatePath('/events')
+    revalidatePath('/')
+}
+
 export async function approveAllPending() {
     const supabase = await createClient()
 
