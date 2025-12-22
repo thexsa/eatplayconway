@@ -11,19 +11,8 @@ interface PlayDetailPageProps {
     }>
 }
 
-function getPlayImage(slug: string): string {
-    // Local images downloaded to /public/images/play/
-    if (slug === 'conway-family-bowl') return '/images/play/conway-family-bowl.jpg';
-    if (slug === 'action-jacks-conway') return '/images/play/action-jacks-conway.jpg';
-    if (slug === 'urban-air-conway') return '/images/play/urban-air-conway.jpg';
-    if (slug === 'jacks-ultra-sports') return '/images/play/jacks-ultra-sports.jpg';
-    if (slug === 'home-depot-conway-classes') return '/images/play/home-depot-conway-classes.jpg';
-    if (slug === 'painting-with-a-twist-conway') return '/images/play/painting-with-a-twist-conway.jpg';
+import { getPlayImage } from '@/lib/data/play-images';
 
-    // Generic Fallbacks
-    if (slug.includes('bowl')) return '/images/play/conway-family-bowl.jpg';
-    return '/images/play/conway-family-bowl.jpg';
-}
 
 const DAYS_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 

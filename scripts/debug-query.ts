@@ -11,18 +11,14 @@ const supabase = createClient(
 )
 
 async function debugQuery() {
-    // Inspect Events
-    console.log('\n--- Inspecting Events Table ---');
-    const { data: events, error } = await supabase
-        .from('events')
-        .select('*')
-        .limit(1);
+    console.log('\n--- Inspecting Play Slugs ---');
+    const { data: venues } = await supabase
+        .from('businesses')
+        .select('name, slug, category')
+        .in('category', ['arts_entertainment', 'retail', 'park'])
+        .order('name');
 
-    if (error) console.error(error);
-    else if (events && events.length > 0) {
-        console.log('Available columns:', Object.keys(events[0]));
-        console.log('Sample event:', events[0]);
-    }
+    venues?.forEach(v => console.log(`'${v.slug}': '${v.name}' (${v.category})`));
 }
 
 
