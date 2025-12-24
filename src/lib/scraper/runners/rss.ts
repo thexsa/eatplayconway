@@ -67,6 +67,8 @@ export class RssScraper implements ScraperRunner {
 
                 if ((!image || isGoogleThumbnail) && item.link) {
                     try {
+                        // Rate limiting: small delay before deep fetch
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         const ogImage = await this.fetchOgImage(item.link);
                         if (ogImage) {
                             // If we got a valid OG image, use it!

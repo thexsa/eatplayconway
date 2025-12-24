@@ -231,10 +231,17 @@ export async function ingestEvents(events: NormalizedEvent[], sourceId: string, 
         return
     }
 
-    const { error } = await supabase.from('events').insert(finalEventsToInsert)
+    const { data: inserted, error } = await supabase.from('events').insert(finalEventsToInsert).select('id')
 
     if (error) {
-        console.error('Ingest Error', error)
-        throw new Error('Failed to insert events')
+        console.error('[Ingest] Database Insert Error:', {
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            code: error.code
+        })
+        throw new Error(`Failed to insert events: ${error.message}`)
     }
+
+    console.log(`[Ingest] Success: ${inserted?.length || 0} events added.`)
 }
