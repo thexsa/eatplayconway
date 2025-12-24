@@ -15,8 +15,8 @@ export const PLAY_IMAGES: Record<string, string> = {
     'hendrix-creek-preserve': '/images/play/hendrix_creek_preserve.png',
 
     // Specific Unsplash Fallbacks (Authentic Feel)
-    'share-the-love-kidsclub': 'https://images.unsplash.com/photo-1560067174-c5a3a8f3d6ce?auto=format&fit=crop&w=800&q=80', // Indoor colorful play
-    'gatling-park': 'https://images.unsplash.com/photo-1560252192-3eb699684175?auto=format&fit=crop&w=800&q=80', // Park bench
+    'share-the-love-kidsclub': '/images/play/share_the_love_kidsclub.png',
+    'gatling-park': '/images/play/gatling_park.png',
 };
 
 export function getPlayImage(slug: string): string {
