@@ -2,9 +2,8 @@
 export const PLAY_IMAGES: Record<string, string> = {
     // Local / Generated Images
     'conway-family-bowl': '/images/play/conway-family-bowl.jpg',
-    'action-jacks-conway': '/images/play/action-jacks-conway.jpg',
+    'action-jacks-conway': '/images/play/action-jacks-conway.png',
     'urban-air-conway': '/images/play/urban-air-conway.jpg',
-    'jacks-ultra-sports': '/images/play/jacks-ultra-sports.jpg',
     'home-depot-conway-classes': '/images/play/home-depot-conway-classes.jpg',
     'painting-with-a-twist-conway': '/images/play/painting-with-a-twist-conway.jpg',
 
