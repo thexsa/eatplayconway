@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Discover the best local events, deals, and businesses in Conway, Arkansas.",
 };
 
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,8 +31,11 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${inter.variable} antialiased`}
       >
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );
 }
+
