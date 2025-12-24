@@ -10,6 +10,7 @@ export function EventCard({ event }: { event: { title: string, start_time: strin
     const venueName = event.businesses?.name || (venueMatch ? venueMatch[1] : 'Conway, AR')
     const minPrice = event.price_min
     const maxPrice = event.price_max
+    const isNews = event.categories?.includes('news')
 
     return (
         <ScrollReveal>
@@ -30,34 +31,43 @@ export function EventCard({ event }: { event: { title: string, start_time: strin
                             <Calendar className="size-16" />
                         </div>
                     )}
-                    {/* Badge Removed */}
                 </div>
 
                 <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-2 text-xs font-bold uppercase tracking-wide text-brand-red">
-                        {format(startDate, 'EEE, MMM d • h:mm a')}
-                    </div>
+                    {!isNews && (
+                        <div className="mb-2 text-xs font-bold uppercase tracking-wide text-brand-red">
+                            {format(startDate, 'EEE, MMM d • h:mm a')}
+                        </div>
+                    )}
 
                     <h3 className="mb-3 font-serif text-xl font-medium leading-tight text-text-dark transition-colors group-hover:text-brand-orange line-clamp-2">
                         {event.title}
                     </h3>
 
                     <div className="mt-auto flex flex-col gap-2 text-sm text-gray-500">
-                        <div className="flex items-center gap-2">
-                            <MapPin className="size-4 text-brand-yellow" />
-                            <span className="line-clamp-1">{venueName}</span>
-                        </div>
+                        {isNews ? (
+                            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                {format(startDate, 'MMMM d, yyyy')}
+                            </div>
+                        ) : (
+                            <>
+                                <div className="flex items-center gap-2">
+                                    <MapPin className="size-4 text-brand-yellow" />
+                                    <span className="line-clamp-1">{venueName}</span>
+                                </div>
 
-                        <div className="flex items-center gap-2">
-                            <Info className="size-4 text-brand-orange" />
-                            <span>
-                                {minPrice === 0
-                                    ? 'Free Entry'
-                                    : minPrice
-                                        ? `$${minPrice}` + (maxPrice ? ` - $${maxPrice}` : '+')
-                                        : 'See Details'}
-                            </span>
-                        </div>
+                                <div className="flex items-center gap-2">
+                                    <Info className="size-4 text-brand-orange" />
+                                    <span>
+                                        {minPrice === 0
+                                            ? 'Free Entry'
+                                            : minPrice
+                                                ? `$${minPrice}` + (maxPrice ? ` - $${maxPrice}` : '+')
+                                                : 'See Details'}
+                                    </span>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </Link>
