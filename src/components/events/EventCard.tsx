@@ -10,7 +10,7 @@ export function EventCard({ event }: { event: { title: string, start_time: strin
     const venueName = event.businesses?.name || (venueMatch ? venueMatch[1] : 'Conway, AR')
     const minPrice = event.price_min
     const maxPrice = event.price_max
-    const isNews = event.categories?.includes('news')
+    const isNews = event.categories?.some(c => c.toLowerCase() === 'news')
 
     return (
         <ScrollReveal>
