@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { login } from '../actions'
+import { login } from '@/app/auth/actions'
 import { Loader2, ArrowRight, Mail, Lock } from 'lucide-react'
 
 export default function LoginPage() {

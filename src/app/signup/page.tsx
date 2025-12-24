@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { signup } from '../actions'
+import { signup } from '@/app/auth/actions'
 import { Loader2, ArrowRight, User, Mail, Lock } from 'lucide-react'
 
 export default function SignupPage() {
