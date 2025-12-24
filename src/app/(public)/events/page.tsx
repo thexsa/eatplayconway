@@ -3,6 +3,7 @@ import { Calendar, Filter, ArrowRight } from 'lucide-react'
 import { getUpcomingEvents } from '@/lib/api/events'
 import Link from 'next/link'
 import { EventsFilter } from '@/components/events/EventsFilter'
+import { ScrollReveal } from '@/components/layout/ScrollReveal'
 
 export const dynamic = 'force-dynamic' // Disable caching for debugging
 
@@ -15,25 +16,31 @@ export default async function EventsPage() {
             {/* Header */}
             <div className="bg-white/50 pt-32 pb-16 px-4 mb-12 border-b border-gray-100">
                 <div className="container mx-auto">
-                    <h1 className="font-serif text-5xl font-medium text-text-dark mb-4">All Events</h1>
-                    <p className="text-xl text-gray-600 font-sans max-w-2xl">
-                        Discover what's happening in Conway using our curated calendar of community events.
-                    </p>
+                    <ScrollReveal>
+                        <h1 className="font-serif text-5xl font-medium text-text-dark mb-4">All Events</h1>
+                    </ScrollReveal>
+                    <ScrollReveal threshold={0.2}>
+                        <p className="text-xl text-gray-600 font-sans max-w-2xl">
+                            Discover what's happening in Conway using our curated calendar of community events.
+                        </p>
+                    </ScrollReveal>
                 </div>
             </div>
 
             <div className="container mx-auto px-4">
                 <div className="flex flex-col gap-8">
                     {/* Filters Bar */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
-                        <div className="font-serif text-lg text-text-dark">
-                            Showing {events.length} Upcoming Events
+                    <ScrollReveal threshold={0.1}>
+                        <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
+                            <div className="font-serif text-lg text-text-dark">
+                                Showing {events.length} Upcoming Events
+                            </div>
+                            <EventsFilter />
                         </div>
-                        <EventsFilter />
-                    </div>
+                    </ScrollReveal>
 
                     {/* Grid */}
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 stagger-grid revealed">
                         {events.map((event) => (
                             <EventCard key={event.id} event={event} />
                         ))}

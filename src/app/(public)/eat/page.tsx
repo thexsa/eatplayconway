@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { RestaurantCard } from '@/components/eat/RestaurantCard';
+import { ScrollReveal } from '@/components/layout/ScrollReveal';
 
 export const revalidate = 3600; // 1 hour
 
@@ -28,12 +29,16 @@ export default async function EatPage() {
     return (
         <div className="min-h-screen bg-brand-cream pt-24 pb-12 px-4 md:px-8">
             <div className="mb-10 text-center">
-                <h1 className="text-4xl font-extrabold tracking-tight text-text-dark md:text-5xl lg:text-6xl mb-4 text-center">
-                    Eat & Drink
-                </h1>
-                <p className="mx-auto max-w-2xl text-lg text-muted-foreground text-center">
-                    Discover local favorites, daily specials, and happy hours in Conway.
-                </p>
+                <ScrollReveal>
+                    <h1 className="text-4xl font-extrabold tracking-tight text-text-dark md:text-5xl lg:text-6xl mb-4 text-center">
+                        Eat & Drink
+                    </h1>
+                </ScrollReveal>
+                <ScrollReveal threshold={0.2}>
+                    <p className="mx-auto max-w-2xl text-lg text-muted-foreground text-center">
+                        Discover local favorites, daily specials, and happy hours in Conway.
+                    </p>
+                </ScrollReveal>
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 stagger-grid revealed">

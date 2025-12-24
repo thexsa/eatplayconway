@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { PlayCard } from '@/components/play/PlayCard';
 import { EventCard } from '@/components/events/EventCard';
 import { getUpcomingEvents } from '@/lib/api/events';
+import { ScrollReveal } from '@/components/layout/ScrollReveal';
 
 export const revalidate = 3600; // 1 hour
 
@@ -34,12 +35,16 @@ export default async function PlayPage() {
 
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto">
-                <h1 className="text-4xl font-extrabold tracking-tight text-text-dark md:text-6xl mb-6 font-serif">
-                    Play in Conway
-                </h1>
-                <p className="text-lg text-gray-600 leading-relaxed">
-                    Discover parks, entertainment, and upcoming events for the whole family.
-                </p>
+                <ScrollReveal>
+                    <h1 className="text-4xl font-extrabold tracking-tight text-text-dark md:text-6xl mb-6 font-serif">
+                        Play in Conway
+                    </h1>
+                </ScrollReveal>
+                <ScrollReveal threshold={0.2}>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                        Discover parks, entertainment, and upcoming events for the whole family.
+                    </p>
+                </ScrollReveal>
             </div>
 
             {/* Attractions Section */}
@@ -49,7 +54,7 @@ export default async function PlayPage() {
                     <div className="h-px flex-1 bg-gray-200"></div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 stagger-grid revealed">
                     {attractions.length > 0 ? (
                         attractions.map((r: any) => (
                             <PlayCard
@@ -76,7 +81,7 @@ export default async function PlayPage() {
                     </a>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 stagger-grid revealed">
                     {events.length > 0 ? (
                         events.map((event) => (
                             <EventCard key={event.id} event={event} />

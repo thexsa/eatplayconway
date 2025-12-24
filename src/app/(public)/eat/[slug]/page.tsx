@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ExternalLink, MapPin, ChevronLeft, Menu as MenuIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { ScrollReveal } from '@/components/layout/ScrollReveal';
 
 interface RestaurantDetailPageProps {
     params: Promise<{
@@ -101,194 +102,199 @@ export default async function RestaurantDetailPage(props: RestaurantDetailPagePr
                 </Link>
 
                 {/* Hero Section */}
-                <div className="relative h-[300px] w-full rounded-3xl overflow-hidden shadow-lg mb-8 group">
-                    <img
-                        src={imageUrl}
-                        alt={restaurant.name}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <ScrollReveal>
+                    <div className="relative h-[300px] w-full rounded-3xl overflow-hidden shadow-lg mb-8 group">
+                        <img
+                            src={imageUrl}
+                            alt={restaurant.name}
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                    <div className="absolute bottom-0 left-0 right-0 p-8">
-                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight shadow-sm">{restaurant.name}</h1>
-                        {restaurant.address && (
-                            <div className="flex items-center gap-2 text-white/90 text-sm md:text-base font-medium">
-                                <MapPin className="h-4 w-4 text-brand-orange" />
-                                {restaurant.address}
-                            </div>
-                        )}
+                        <div className="absolute bottom-0 left-0 right-0 p-8">
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight shadow-sm">{restaurant.name}</h1>
+                            {restaurant.address && (
+                                <div className="flex items-center gap-2 text-white/90 text-sm md:text-base font-medium">
+                                    <MapPin className="h-4 w-4 text-brand-orange" />
+                                    {restaurant.address}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                </ScrollReveal>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="md:col-span-2 space-y-8">
                         {/* Description */}
                         {restaurant.description && (
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40">
-                                <h2 className="text-xl font-bold text-text-dark mb-4 border-b border-gray-100 pb-2">About</h2>
-                                <p className="text-text-dark/80 leading-relaxed">
-                                    {restaurant.description}
-                                </p>
-                            </div>
+                            <ScrollReveal threshold={0.2}>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40">
+                                    <h2 className="text-xl font-bold text-text-dark mb-4 border-b border-gray-100 pb-2">About</h2>
+                                    <p className="text-text-dark/80 leading-relaxed">
+                                        {restaurant.description}
+                                    </p>
+                                </div>
+                            </ScrollReveal>
                         )}
 
                         {/* Weekly Specials */}
                         {deals && deals.length > 0 && (
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40">
-                                <h2 className="text-xl font-bold text-text-dark mb-4 border-b border-gray-100 pb-2 flex items-center gap-2">
-                                    <span>🌟 Weekly Specials</span>
-                                </h2>
-                                <div className="space-y-4">
-                                    {deals.sort((a, b) => {
-                                        // Simple sort by distinct days? 
-                                        // A deal might be active multiple days. 
-                                        // Logic: Display deals grouped by day? Or list them all? 
-                                        // User asked to have "FULL list... listed".
-                                        // Grouping by "Every Day" vs specific days is nice.
-                                        return 0;
-                                    }).map(deal => (
-                                        <div key={deal.id} className="flex flex-col sm:flex-row sm:items-start justify-between p-3 rounded-lg bg-secondary/5 gap-2">
-                                            <div>
-                                                <h4 className="font-semibold text-text-dark">{deal.title}</h4>
-                                                {deal.description && <p className="text-sm text-text-dark/70">{deal.description}</p>}
-                                                <div className="flex flex-wrap gap-2 mt-2">
-                                                    {deal.days_active && deal.days_active.map((day: string) => (
-                                                        <span key={day} className="text-[10px] bg-white border border-border px-1.5 py-0.5 rounded text-muted-foreground">{day}</span>
-                                                    ))}
-                                                    {deal.deal_type && (
-                                                        <span className={cn(
-                                                            "text-[10px] px-1.5 py-0.5 rounded font-medium uppercase",
-                                                            deal.deal_type === 'food' ? "bg-orange-100 text-orange-700" :
-                                                                deal.deal_type === 'drink' ? "bg-blue-100 text-blue-700" :
-                                                                    deal.deal_type === 'happy_hour' ? "bg-purple-100 text-purple-700" :
-                                                                        "bg-gray-100 text-gray-700"
-                                                        )}>
-                                                            {deal.deal_type.replace('_', ' ')}
-                                                        </span>
-                                                    )}
+                            <ScrollReveal threshold={0.2}>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40">
+                                    <h2 className="text-xl font-bold text-text-dark mb-4 border-b border-gray-100 pb-2 flex items-center gap-2">
+                                        <span>🌟 Weekly Specials</span>
+                                    </h2>
+                                    <div className="space-y-4">
+                                        {deals.sort((a, b) => {
+                                            return 0;
+                                        }).map(deal => (
+                                            <div key={deal.id} className="flex flex-col sm:flex-row sm:items-start justify-between p-3 rounded-lg bg-secondary/5 gap-2">
+                                                <div>
+                                                    <h4 className="font-semibold text-text-dark">{deal.title}</h4>
+                                                    {deal.description && <p className="text-sm text-text-dark/70">{deal.description}</p>}
+                                                    <div className="flex flex-wrap gap-2 mt-2">
+                                                        {deal.days_active && deal.days_active.map((day: string) => (
+                                                            <span key={day} className="text-[10px] bg-white border border-border px-1.5 py-0.5 rounded text-muted-foreground">{day}</span>
+                                                        ))}
+                                                        {deal.deal_type && (
+                                                            <span className={cn(
+                                                                "text-[10px] px-1.5 py-0.5 rounded font-medium uppercase",
+                                                                deal.deal_type === 'food' ? "bg-orange-100 text-orange-700" :
+                                                                    deal.deal_type === 'drink' ? "bg-blue-100 text-blue-700" :
+                                                                        deal.deal_type === 'happy_hour' ? "bg-purple-100 text-purple-700" :
+                                                                            "bg-gray-100 text-gray-700"
+                                                            )}>
+                                                                {deal.deal_type.replace('_', ' ')}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
+                                                {deal.start_time && (
+                                                    <div className="text-xs font-mono bg-white px-2 py-1 rounded border border-border whitespace-nowrap">
+                                                        {deal.start_time} - {deal.end_time || 'Close'}
+                                                    </div>
+                                                )}
                                             </div>
-                                            {deal.start_time && (
-                                                <div className="text-xs font-mono bg-white px-2 py-1 rounded border border-border whitespace-nowrap">
-                                                    {deal.start_time} - {deal.end_time || 'Close'}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            </ScrollReveal>
                         )}
 
                         {/* Menu Check */}
                         {restaurant.menu_url && (
-                            <div className="bg-white rounded-2xl shadow-sm border border-border/40 overflow-hidden">
-                                <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                                    <h2 className="text-xl font-bold text-text-dark flex items-center gap-2">
-                                        <MenuIcon className="h-5 w-5 text-brand-orange" />
-                                        Menu
-                                    </h2>
-                                    <a
-                                        href={restaurant.menu_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-xs font-semibold text-brand-orange hover:underline uppercase tracking-wide"
-                                    >
-                                        Open in New Tab <ExternalLink className="h-3 w-3 inline ml-0.5" />
-                                    </a>
-                                </div>
-
-                                {canEmbed ? (
-                                    <div className="w-full h-[600px] bg-secondary/10 relative">
-                                        <iframe
-                                            src={restaurant.menu_url}
-                                            className="w-full h-full border-0"
-                                            title={`${restaurant.name} Menu`}
-                                            sandbox="allow-scripts allow-same-origin allow-popups"
-                                            loading="lazy"
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className="p-12 flex flex-col items-center justify-center text-center bg-secondary/5">
-                                        <div className="h-16 w-16 bg-brand-orange/10 rounded-full flex items-center justify-center mb-4">
-                                            <MenuIcon className="h-8 w-8 text-brand-orange" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-text-dark mb-2">View Menu on Website</h3>
-                                        <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
-                                            This restaurant's menu cannot be embedded directly. Please view it on their website.
-                                        </p>
+                            <ScrollReveal threshold={0.2}>
+                                <div className="bg-white rounded-2xl shadow-sm border border-border/40 overflow-hidden">
+                                    <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                                        <h2 className="text-xl font-bold text-text-dark flex items-center gap-2">
+                                            <MenuIcon className="h-5 w-5 text-brand-orange" />
+                                            Menu
+                                        </h2>
                                         <a
                                             href={restaurant.menu_url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center px-6 py-3 rounded-xl bg-brand-orange text-white font-semibold shadow-md hover:bg-brand-orange-hover hover:shadow-lg transition-all"
+                                            className="text-xs font-semibold text-brand-orange hover:underline uppercase tracking-wide"
                                         >
-                                            Open Menu <ExternalLink className="h-4 w-4 ml-2" />
+                                            Open in New Tab <ExternalLink className="h-3 w-3 inline ml-0.5" />
                                         </a>
                                     </div>
-                                )}
-                            </div>
+
+                                    {canEmbed ? (
+                                        <div className="w-full h-[600px] bg-secondary/10 relative">
+                                            <iframe
+                                                src={restaurant.menu_url}
+                                                className="w-full h-full border-0"
+                                                title={`${restaurant.name} Menu`}
+                                                sandbox="allow-scripts allow-same-origin allow-popups"
+                                                loading="lazy"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="p-12 flex flex-col items-center justify-center text-center bg-secondary/5">
+                                            <div className="h-16 w-16 bg-brand-orange/10 rounded-full flex items-center justify-center mb-4">
+                                                <MenuIcon className="h-8 w-8 text-brand-orange" />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-text-dark mb-2">View Menu on Website</h3>
+                                            <p className="text-sm text-muted-foreground mb-6 max-w-xs mx-auto">
+                                                This restaurant's menu cannot be embedded directly. Please view it on their website.
+                                            </p>
+                                            <a
+                                                href={restaurant.menu_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center px-6 py-3 rounded-xl bg-brand-orange text-white font-semibold shadow-md hover:bg-brand-orange-hover hover:shadow-lg transition-all"
+                                            >
+                                                Open Menu <ExternalLink className="h-4 w-4 ml-2" />
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                            </ScrollReveal>
                         )}
                     </div>
 
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Operating Hours */}
-                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40 sticky top-24">
-                            <h3 className="font-bold text-text-dark mb-4 text-lg">Hours of Operation</h3>
-                            {hours ? (
-                                <ul className="space-y-2 text-sm">
-                                    {DAYS_ORDER.map(day => {
-                                        const time = hours[day]; // Assuming keys match case
-                                        const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }) === day;
-                                        return (
-                                            <li key={day} className={cn("flex justify-between items-center py-1 border-b border-dashed border-gray-100 last:border-0", isToday && "font-bold text-brand-orange")}>
-                                                <span className="text-text-dark/80">{day}</span>
-                                                <span className={cn("text-right", !time ? "text-muted-foreground italic" : "text-text-dark")}>
-                                                    {time || 'Closed'}
-                                                </span>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            ) : (
-                                <p className="text-sm text-muted-foreground italic">Hours not available.</p>
-                            )}
-
-                            {/* Links Actions */}
-                            <div className="mt-8 space-y-4 pt-4 border-t border-gray-100">
-                                {restaurant.website_url && (
-                                    <a
-                                        href={restaurant.website_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center justify-between w-full p-3 rounded-lg bg-secondary/10 hover:bg-secondary/20 text-text-dark font-medium transition-colors group"
-                                    >
-                                        <span>Visit Website</span>
-                                        <ExternalLink className="h-4 w-4 text-brand-orange group-hover:scale-110 transition-transform" />
-                                    </a>
-                                )}
-
-                                {restaurant.menu_url ? (
-                                    <a
-                                        href={restaurant.menu_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center justify-between w-full p-3 rounded-lg bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-medium transition-colors group"
-                                    >
-                                        <span>Full Menu</span>
-                                        <MenuIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                                    </a>
+                        <ScrollReveal threshold={0.3}>
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-border/40 sticky top-24">
+                                <h3 className="font-bold text-text-dark mb-4 text-lg">Hours of Operation</h3>
+                                {hours ? (
+                                    <ul className="space-y-2 text-sm">
+                                        {DAYS_ORDER.map(day => {
+                                            const time = hours[day]; // Assuming keys match case
+                                            const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }) === day;
+                                            return (
+                                                <li key={day} className={cn("flex justify-between items-center py-1 border-b border-dashed border-gray-100 last:border-0", isToday && "font-bold text-brand-orange")}>
+                                                    <span className="text-text-dark/80">{day}</span>
+                                                    <span className={cn("text-right", !time ? "text-muted-foreground italic" : "text-text-dark")}>
+                                                        {time || 'Closed'}
+                                                    </span>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
                                 ) : (
-                                    <a
-                                        href="/submit"
-                                        className="flex items-center justify-between w-full p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-dashed border-gray-200 text-muted-foreground hover:text-brand-orange transition-colors group"
-                                    >
-                                        <span>Add your menu</span>
-                                        <span className="text-xs bg-white border px-2 py-0.5 rounded-full group-hover:border-brand-orange/30">Owner?</span>
-                                    </a>
+                                    <p className="text-sm text-muted-foreground italic">Hours not available.</p>
                                 )}
+
+                                {/* Links Actions */}
+                                <div className="mt-8 space-y-4 pt-4 border-t border-gray-100">
+                                    {restaurant.website_url && (
+                                        <a
+                                            href={restaurant.website_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-between w-full p-3 rounded-lg bg-secondary/10 hover:bg-secondary/20 text-text-dark font-medium transition-colors group"
+                                        >
+                                            <span>Visit Website</span>
+                                            <ExternalLink className="h-4 w-4 text-brand-orange group-hover:scale-110 transition-transform" />
+                                        </a>
+                                    )}
+
+                                    {restaurant.menu_url ? (
+                                        <a
+                                            href={restaurant.menu_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-between w-full p-3 rounded-lg bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange font-medium transition-colors group"
+                                        >
+                                            <span>Full Menu</span>
+                                            <MenuIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                                        </a>
+                                    ) : (
+                                        <a
+                                            href="/submit"
+                                            className="flex items-center justify-between w-full p-3 rounded-lg bg-gray-50 hover:bg-gray-100 border border-dashed border-gray-200 text-muted-foreground hover:text-brand-orange transition-colors group"
+                                        >
+                                            <span>Add your menu</span>
+                                            <span className="text-xs bg-white border px-2 py-0.5 rounded-full group-hover:border-brand-orange/30">Owner?</span>
+                                        </a>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        </ScrollReveal>
                     </div>
                 </div>
 
