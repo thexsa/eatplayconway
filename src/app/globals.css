@@ -45,3 +45,37 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), sans-serif;
 }
+
+/* Apple-style Scroll Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered loading for grids */
+.stagger-grid > * {
+  --delay: 0ms;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--delay);
+}
+
+.stagger-grid.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation Delays */
+.delay-100 { --delay: 100ms; }
+.delay-200 { --delay: 200ms; }
+.delay-300 { --delay: 300ms; }
+.delay-400 { --delay: 400ms; }
+.delay-500 { --delay: 500ms; }
