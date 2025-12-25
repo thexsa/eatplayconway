@@ -20,19 +20,19 @@ export default function HomePage() {
                     </ScrollReveal>
 
                     <ScrollReveal threshold={0.2}>
-                        <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-white/90 font-medium drop-shadow-md">
+                        <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl leading-8 text-white/90 font-medium drop-shadow-md">
                             Discover local eats, hidden gems, and the best entertainment.
                         </p>
                     </ScrollReveal>
 
-                    <div className="mt-12 flex items-center justify-center gap-x-6 stagger-grid revealed">
+                    <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6 stagger-grid revealed">
                         <ScrollReveal threshold={0.3}>
-                            <Link href="/conway" className="rounded-full bg-brand-orange px-10 py-4 text-lg font-bold text-white shadow-xl hover:bg-brand-red transition-all duration-300 hover:scale-105 border-2 border-transparent">
+                            <Link href="/conway" className="w-full sm:w-auto rounded-full bg-brand-orange px-8 sm:px-10 py-4 text-base sm:text-lg font-bold text-white shadow-xl hover:bg-brand-red transition-all duration-300 hover:scale-105 border-2 border-transparent text-center">
                                 Start Exploring
                             </Link>
                         </ScrollReveal>
                         <ScrollReveal threshold={0.3}>
-                            <Link href="/eat" className="rounded-full bg-white/10 backdrop-blur-md px-10 py-4 text-lg font-bold text-white shadow-lg border-2 border-white/50 hover:bg-white/20 transition-all duration-300">
+                            <Link href="/eat" className="w-full sm:w-auto rounded-full bg-white/10 backdrop-blur-md px-8 sm:px-10 py-4 text-base sm:text-lg font-bold text-white shadow-lg border-2 border-white/50 hover:bg-white/20 transition-all duration-300 text-center">
                                 Find Food
                             </Link>
                         </ScrollReveal>
