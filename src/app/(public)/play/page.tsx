@@ -4,7 +4,7 @@ import { EventCard } from '@/components/events/EventCard';
 import { getUpcomingEvents } from '@/lib/api/events';
 import { ScrollReveal } from '@/components/layout/ScrollReveal';
 
-export const revalidate = 3600; // 1 hour
+export const revalidate = 10; // Change to 10s to bust cache
 
 export default async function PlayPage() {
     const supabase = await createClient();
