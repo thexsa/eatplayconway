@@ -21,7 +21,7 @@ export async function getUpcomingEvents(limit: number = 20) {
             )
         `)
         .eq('status', 'published')
-        .not('categories', 'cs', '{"News"}') // Exclude News from main event feed
+        .not('categories', 'cs', ['News']) // Cleaner array syntax
         .gte('start_time', new Date().toISOString())
         .order('start_time', { ascending: true })
         .limit(limit)
